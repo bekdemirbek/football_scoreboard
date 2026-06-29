@@ -1,0 +1,40 @@
+name: Deploy Web Demo
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # NOTE: API_FOOTBALL_KEY is intentionally NOT embedded in the public
+      # build. It has a 100 req/day free-tier cap that a single visitor
+      # refreshing the page could exhaust, breaking the demo for everyone.
+      # The match detail "Kadro / İstatistik" tabs degrade gracefully and
+      # show a friendly notice instead. Run the app locally with your own
+      # key (see .env.example) to see the full match-detail feature.
+      - name: Build web
+        run: |
+          flutter build web --release \
+            --base-href "/${{ github.event.repository.name }}/" \
+            --dart-define=FOOTBALL_DATA_API_KEY=${{ secrets.FOOTBALL_DATA_API_KEY }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web

@@ -42,7 +42,8 @@ class GlassCard extends StatelessWidget {
       ),
       boxShadow: [
         BoxShadow(
-          color: glowColor?.withValues(alpha: isDark ? 0.18 : 0.08) ??
+          color:
+              glowColor?.withValues(alpha: isDark ? 0.18 : 0.08) ??
               ac.cardShadow,
           blurRadius: glowColor != null ? 24 : 12,
           spreadRadius: glowColor != null ? -2 : -4,
@@ -77,8 +78,9 @@ class GlassCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadius),
           splashColor: (highlightColor ?? ac.cardBorder).withValues(alpha: 0.1),
-          highlightColor:
-              (highlightColor ?? ac.cardBorder).withValues(alpha: 0.06),
+          highlightColor: (highlightColor ?? ac.cardBorder).withValues(
+            alpha: 0.06,
+          ),
           child: content,
         ),
       );

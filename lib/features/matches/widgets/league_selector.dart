@@ -43,9 +43,7 @@ class LeagueSelector extends StatelessWidget {
                     : null,
                 color: selected ? null : ac.unselectedPill,
                 border: Border.all(
-                  color: selected
-                      ? Colors.transparent
-                      : ac.cardBorder,
+                  color: selected ? Colors.transparent : ac.cardBorder,
                 ),
                 boxShadow: selected
                     ? [

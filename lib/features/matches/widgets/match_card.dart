@@ -97,11 +97,7 @@ class MatchCard extends StatelessWidget {
                       : _TimeStatus(match: match, finished: finished, ac: ac),
                 ),
                 // ── Divider ──────────────────────────────────────────
-                Container(
-                  width: 1,
-                  height: 44,
-                  color: ac.divider,
-                ),
+                Container(width: 1, height: 44, color: ac.divider),
                 const SizedBox(width: 12),
                 // ── Teams ────────────────────────────────────────────
                 Expanded(
@@ -125,14 +121,16 @@ class MatchCard extends StatelessWidget {
                     children: [
                       _ScoreBox(
                         value: hasScore ? '${match.homeScore}' : '—',
-                        highlight: hasScore &&
+                        highlight:
+                            hasScore &&
                             match.homeScore! > (match.awayScore ?? -1),
                         ac: ac,
                       ),
                       const SizedBox(height: 8),
                       _ScoreBox(
                         value: hasScore ? '${match.awayScore}' : '—',
-                        highlight: hasScore &&
+                        highlight:
+                            hasScore &&
                             match.awayScore! > (match.homeScore ?? -1),
                         ac: ac,
                       ),
@@ -212,8 +210,9 @@ class _LiveStatusState extends State<_LiveStatus>
               color: widget.ac.liveColor,
               boxShadow: [
                 BoxShadow(
-                  color: widget.ac.liveColor
-                      .withValues(alpha: 0.7 * _pulse.value),
+                  color: widget.ac.liveColor.withValues(
+                    alpha: 0.7 * _pulse.value,
+                  ),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),

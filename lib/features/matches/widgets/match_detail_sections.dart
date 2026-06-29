@@ -88,10 +88,7 @@ class _DetailTabsState extends State<_DetailTabs> {
         const SizedBox(height: 14),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
-          child: KeyedSubtree(
-            key: ValueKey(index),
-            child: tabs[index].$2,
-          ),
+          child: KeyedSubtree(key: ValueKey(index), child: tabs[index].$2),
         ),
       ],
     );

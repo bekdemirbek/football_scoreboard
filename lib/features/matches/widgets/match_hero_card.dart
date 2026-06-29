@@ -35,7 +35,9 @@ class MatchHeroCard extends StatelessWidget {
   List<MatchEvent> _scorersFor(bool home) {
     final d = detail;
     if (d == null) return const [];
-    return d.goals.where((g) => d.isHomeEvent(g) == home).toList(growable: false);
+    return d.goals
+        .where((g) => d.isHomeEvent(g) == home)
+        .toList(growable: false);
   }
 
   @override
@@ -72,8 +74,12 @@ class MatchHeroCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    ac.headerGradientStart.withValues(alpha: isDark ? 0.22 : 0.14),
-                    ac.headerGradientEnd.withValues(alpha: isDark ? 0.18 : 0.10),
+                    ac.headerGradientStart.withValues(
+                      alpha: isDark ? 0.22 : 0.14,
+                    ),
+                    ac.headerGradientEnd.withValues(
+                      alpha: isDark ? 0.18 : 0.10,
+                    ),
                   ],
                 ),
               ),
@@ -119,7 +125,9 @@ class MatchHeroCard extends StatelessWidget {
                                 ? '${match.homeScore}  -  ${match.awayScore}'
                                 : 'VS',
                             style: TextStyle(
-                              color: hasScore ? ac.textPrimary : ac.textTertiary,
+                              color: hasScore
+                                  ? ac.textPrimary
+                                  : ac.textTertiary,
                               fontSize: hasScore ? 28 : 22,
                               fontWeight: FontWeight.w900,
                               letterSpacing: -1,
@@ -154,7 +162,10 @@ class MatchHeroCard extends StatelessWidget {
                 if (!live && match.status != null) ...[
                   const SizedBox(height: 14),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: ac.cardSurface,
                       borderRadius: BorderRadius.circular(20),

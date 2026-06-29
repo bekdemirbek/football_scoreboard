@@ -22,7 +22,11 @@ class MatchEventsTab extends StatelessWidget {
         child: Center(
           child: Text(
             'Bu maç için olay verisi yok.',
-            style: TextStyle(color: ac.textTertiary, fontSize: 12, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: ac.textTertiary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       );
@@ -38,7 +42,11 @@ class MatchEventsTab extends StatelessWidget {
 }
 
 class _EventRow extends StatelessWidget {
-  const _EventRow({required this.event, required this.isHome, required this.ac});
+  const _EventRow({
+    required this.event,
+    required this.isHome,
+    required this.ac,
+  });
 
   final MatchEvent event;
   final bool isHome;
@@ -115,7 +123,9 @@ class _EventRow extends StatelessWidget {
 
   String? get _subtitle {
     if (event.isSubstitution) return '${event.playerName} yerine girdi';
-    if (event.isGoal && event.assistName != null) return 'Asist: ${event.assistName}';
+    if (event.isGoal && event.assistName != null) {
+      return 'Asist: ${event.assistName}';
+    }
     if (event.isCard) return event.detail;
     return null;
   }
@@ -150,7 +160,11 @@ class _EventIcon extends StatelessWidget {
     }
     return _circle(
       color: const Color(0xFF64748B),
-      child: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 16),
+      child: const Icon(
+        Icons.swap_horiz_rounded,
+        color: Colors.white,
+        size: 16,
+      ),
     );
   }
 

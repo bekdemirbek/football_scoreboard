@@ -18,7 +18,11 @@ class MatchStatsTab extends StatelessWidget {
         child: Center(
           child: Text(
             'Bu maç için istatistik verisi yok.',
-            style: TextStyle(color: ac.textTertiary, fontSize: 12, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: ac.textTertiary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       );
@@ -32,9 +36,7 @@ class MatchStatsTab extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
-        children: [
-          for (final row in rows) _StatBarRow(row: row, ac: ac),
-        ],
+        children: [for (final row in rows) _StatBarRow(row: row, ac: ac)],
       ),
     );
   }

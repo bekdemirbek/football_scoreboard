@@ -108,7 +108,10 @@ class _PlayerDot extends StatelessWidget {
               width: 1.5,
             ),
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 4,
+              ),
             ],
           ),
           alignment: Alignment.center,
@@ -166,7 +169,10 @@ class _PitchPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4;
 
-    canvas.drawRect(Rect.fromLTWH(8, 8, size.width - 16, size.height - 16), line);
+    canvas.drawRect(
+      Rect.fromLTWH(8, 8, size.width - 16, size.height - 16),
+      line,
+    );
     canvas.drawLine(
       Offset(8, size.height / 2),
       Offset(size.width - 8, size.height / 2),

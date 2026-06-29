@@ -14,7 +14,8 @@ class Team {
   factory Team.fromJson(Map<String, dynamic> json) {
     return Team(
       id: _firstString(json, ['idTeam', 'teamId', 'id']) ?? '',
-      name: _firstString(json, ['strTeam', 'teamName', 'name']) ?? 'Unknown Team',
+      name:
+          _firstString(json, ['strTeam', 'teamName', 'name']) ?? 'Unknown Team',
       badgeUrl: _firstString(json, ['strBadge', 'badgeUrl', 'logo', 'image']),
       country: _firstString(json, ['strCountry', 'country', 'countryName']),
     );

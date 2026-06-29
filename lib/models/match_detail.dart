@@ -31,7 +31,8 @@ class MatchDetail {
   bool get hasStats => statRows.isNotEmpty;
   bool get hasAnyData => hasLineups || hasEvents || hasStats;
 
-  List<MatchEvent> get goals => events.where((e) => e.isGoal).toList(growable: false);
+  List<MatchEvent> get goals =>
+      events.where((e) => e.isGoal).toList(growable: false);
 
   bool isHomeEvent(MatchEvent event) =>
       apiHomeTeamId != null && event.teamId == apiHomeTeamId;

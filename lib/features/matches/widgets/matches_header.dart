@@ -32,7 +32,11 @@ class MatchesHeader extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(Icons.sports_soccer_rounded, color: Colors.white, size: 18),
+          child: const Icon(
+            Icons.sports_soccer_rounded,
+            color: Colors.white,
+            size: 18,
+          ),
         ),
         const SizedBox(width: 10),
         // ── Brand Name ──────────────────────────────────────────────────
@@ -107,7 +111,9 @@ class _IconBtn extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: badgeColor,
                   border: Border.all(
-                    color: Theme.of(context).extension<AppColors>()!.gradientStart,
+                    color: Theme.of(
+                      context,
+                    ).extension<AppColors>()!.gradientStart,
                     width: 1.5,
                   ),
                 ),

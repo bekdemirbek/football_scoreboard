@@ -105,7 +105,9 @@ class ApiService {
         .where((item) => item['type'] == 'TOTAL')
         .toList(growable: false);
     if (entries.isEmpty) {
-      entries = standingsRoot.whereType<Map<String, dynamic>>().toList(growable: false);
+      entries = standingsRoot.whereType<Map<String, dynamic>>().toList(
+        growable: false,
+      );
     }
 
     final standings = <Standing>[];
@@ -114,9 +116,9 @@ class ApiService {
       if (table is! List) continue;
       final group = entry['group']?.toString();
       standings.addAll(
-        table
-            .whereType<Map<String, dynamic>>()
-            .map((row) => Standing.fromJson(row, group: group)),
+        table.whereType<Map<String, dynamic>>().map(
+          (row) => Standing.fromJson(row, group: group),
+        ),
       );
     }
     return standings;

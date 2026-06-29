@@ -106,7 +106,11 @@ class _StandingsHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Icon(Icons.leaderboard_rounded, color: ac.headerGradientStart, size: 24),
+        Icon(
+          Icons.leaderboard_rounded,
+          color: ac.headerGradientStart,
+          size: 24,
+        ),
       ],
     );
   }
@@ -149,14 +153,10 @@ class _PremiumDropdown extends StatelessWidget {
         child: DropdownButton<FootballLeague>(
           value: selectedLeague,
           isExpanded: true,
-          icon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: primary,
-          ),
-          dropdownColor:
-              Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1A2540)
-                  : Colors.white,
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: primary),
+          dropdownColor: Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF1A2540)
+              : Colors.white,
           borderRadius: BorderRadius.circular(14),
           style: TextStyle(
             color: ac.textPrimary,
@@ -167,10 +167,7 @@ class _PremiumDropdown extends StatelessWidget {
               .map(
                 (league) => DropdownMenuItem(
                   value: league,
-                  child: Text(
-                    league.name,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  child: Text(league.name, overflow: TextOverflow.ellipsis),
                 ),
               )
               .toList(),
@@ -243,11 +240,7 @@ class _StandingsTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: ac.cardBorder),
         boxShadow: [
-          BoxShadow(
-            color: ac.cardShadow,
-            blurRadius: 16,
-            spreadRadius: -4,
-          ),
+          BoxShadow(color: ac.cardShadow, blurRadius: 16, spreadRadius: -4),
         ],
       ),
       clipBehavior: Clip.antiAlias,
@@ -255,10 +248,7 @@ class _StandingsTable extends StatelessWidget {
         children: [
           const _TableHeader(),
           for (int i = 0; i < items.length; i++)
-            _StandingRow(
-              standing: items[i],
-              isLast: i == items.length - 1,
-            ),
+            _StandingRow(standing: items[i], isLast: i == items.length - 1),
         ],
       ),
     );
@@ -334,22 +324,24 @@ class _StandingRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isFav = ref.watch(favoriteTeamsProvider).value?.contains(standing.teamName) ?? false;
+    final isFav =
+        ref.watch(favoriteTeamsProvider).value?.contains(standing.teamName) ??
+        false;
 
     // Zone detection (Premier League style — adapt as needed)
     final Color? zoneColor = standing.rank <= 4
         ? ac.championColor
         : standing.rank == 5
-            ? ac.europaColor
-            : standing.rank >= 18
-                ? ac.relegationColor
-                : null;
+        ? ac.europaColor
+        : standing.rank >= 18
+        ? ac.relegationColor
+        : null;
 
     final Color rowBg = standing.rank == 1
         ? ac.goldColor.withValues(alpha: isDark ? 0.12 : 0.07)
         : zoneColor != null
-            ? zoneColor.withValues(alpha: isDark ? 0.06 : 0.04)
-            : Colors.transparent;
+        ? zoneColor.withValues(alpha: isDark ? 0.06 : 0.04)
+        : Colors.transparent;
 
     return InkWell(
       onTap: () =>
@@ -373,10 +365,7 @@ class _StandingRow extends ConsumerWidget {
                     ? LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          zoneColor,
-                          zoneColor.withValues(alpha: 0.3),
-                        ],
+                        colors: [zoneColor, zoneColor.withValues(alpha: 0.3)],
                       )
                     : null,
                 color: zoneColor == null ? Colors.transparent : null,
@@ -386,7 +375,11 @@ class _StandingRow extends ConsumerWidget {
             // ── Rank ────────────────────────────────────────────────
             SizedBox(
               width: 22,
-              child: _RankBadge(rank: standing.rank, zoneColor: zoneColor, ac: ac),
+              child: _RankBadge(
+                rank: standing.rank,
+                zoneColor: zoneColor,
+                ac: ac,
+              ),
             ),
             const SizedBox(width: 8),
             // ── Team ────────────────────────────────────────────────
@@ -403,8 +396,7 @@ class _StandingRow extends ConsumerWidget {
                       style: TextStyle(
                         color: ac.textPrimary,
                         fontSize: 12,
-                        fontWeight:
-                            isFav ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isFav ? FontWeight.w800 : FontWeight.w600,
                       ),
                     ),
                   ),
@@ -532,10 +524,7 @@ class _LegendItem extends StatelessWidget {
             shape: BoxShape.circle,
             color: color,
             boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.5),
-                blurRadius: 4,
-              ),
+              BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 4),
             ],
           ),
         ),
@@ -586,7 +575,8 @@ class _KnockoutSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final knockout = ref.watch(knockoutMatchesProvider);
     final ac = Theme.of(context).extension<AppColors>()!;
-    final favorites = ref.watch(favoriteTeamsProvider).value ?? const <String>{};
+    final favorites =
+        ref.watch(favoriteTeamsProvider).value ?? const <String>{};
 
     return knockout.when(
       loading: () => const SizedBox.shrink(),
@@ -634,9 +624,9 @@ class _KnockoutSection extends ConsumerWidget {
                     hasFavorite:
                         favorites.contains(match.homeTeam) ||
                         favorites.contains(match.awayTeam),
-                    onTap: () => Navigator.of(context).push(
-                      FadeRoute(child: MatchDetailPage(match: match)),
-                    ),
+                    onTap: () => Navigator.of(
+                      context,
+                    ).push(FadeRoute(child: MatchDetailPage(match: match))),
                   ),
                   const SizedBox(height: 8),
                 ],
@@ -701,18 +691,13 @@ class _StandingsSkeleton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          Container(
-            height: 38,
-            color: ac.shimmerBase,
-          ),
+          Container(height: 38, color: ac.shimmerBase),
           for (var i = 0; i < 8; i++)
             Container(
               height: 46,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ac.divider, width: 0.5),
-                ),
+                border: Border(top: BorderSide(color: ac.divider, width: 0.5)),
               ),
               child: Row(
                 children: [
@@ -720,7 +705,11 @@ class _StandingsSkeleton extends StatelessWidget {
                   const SizedBox(width: 10),
                   ShimmerBox(width: 22, height: 22, borderRadius: 11),
                   const SizedBox(width: 8),
-                  ShimmerBox(width: 100 + (i % 3) * 20.0, height: 12, borderRadius: 5),
+                  ShimmerBox(
+                    width: 100 + (i % 3) * 20.0,
+                    height: 12,
+                    borderRadius: 5,
+                  ),
                   const Spacer(),
                   ShimmerBox(width: 32, height: 16, borderRadius: 5),
                 ],
@@ -762,11 +751,7 @@ class _StandingsMessage extends StatelessWidget {
               color: primary.withValues(alpha: 0.1),
               border: Border.all(color: primary.withValues(alpha: 0.2)),
             ),
-            child: Icon(
-              Icons.leaderboard_outlined,
-              color: primary,
-              size: 32,
-            ),
+            child: Icon(Icons.leaderboard_outlined, color: primary, size: 32),
           ),
           const SizedBox(height: 18),
           Text(
@@ -784,7 +769,11 @@ class _StandingsMessage extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: ac.textSecondary, fontSize: 13, height: 1.5),
+            style: TextStyle(
+              color: ac.textSecondary,
+              fontSize: 13,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 20),
           FilledButton.icon(

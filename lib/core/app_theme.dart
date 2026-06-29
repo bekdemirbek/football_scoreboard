@@ -187,14 +187,23 @@ class AppColors extends ThemeExtension<AppColors> {
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
       divider: Color.lerp(divider, other.divider, t)!,
       shimmerBase: Color.lerp(shimmerBase, other.shimmerBase, t)!,
-      shimmerHighlight:
-          Color.lerp(shimmerHighlight, other.shimmerHighlight, t)!,
+      shimmerHighlight: Color.lerp(
+        shimmerHighlight,
+        other.shimmerHighlight,
+        t,
+      )!,
       navBg: Color.lerp(navBg, other.navBg, t)!,
       navBorder: Color.lerp(navBorder, other.navBorder, t)!,
-      headerGradientStart:
-          Color.lerp(headerGradientStart, other.headerGradientStart, t)!,
-      headerGradientEnd:
-          Color.lerp(headerGradientEnd, other.headerGradientEnd, t)!,
+      headerGradientStart: Color.lerp(
+        headerGradientStart,
+        other.headerGradientStart,
+        t,
+      )!,
+      headerGradientEnd: Color.lerp(
+        headerGradientEnd,
+        other.headerGradientEnd,
+        t,
+      )!,
       selectedPill: Color.lerp(selectedPill, other.selectedPill, t)!,
       unselectedPill: Color.lerp(unselectedPill, other.unselectedPill, t)!,
       leagueBadgeBg: Color.lerp(leagueBadgeBg, other.leagueBadgeBg, t)!,
@@ -300,13 +309,8 @@ class AppTheme {
           side: BorderSide(color: extension.cardBorder),
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: extension.divider,
-        thickness: 1,
-      ),
-      listTileTheme: const ListTileThemeData(
-        contentPadding: EdgeInsets.zero,
-      ),
+      dividerTheme: DividerThemeData(color: extension.divider, thickness: 1),
+      listTileTheme: const ListTileThemeData(contentPadding: EdgeInsets.zero),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: primary,

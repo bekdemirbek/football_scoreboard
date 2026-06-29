@@ -26,8 +26,9 @@ class MatchEvent {
   bool get isPenalty => detail.toLowerCase().contains('penalty');
   bool get isRedCard => detail.toLowerCase().contains('red');
 
-  String get minuteLabel =>
-      extraMinute != null && extraMinute! > 0 ? "$minute+$extraMinute'" : "$minute'";
+  String get minuteLabel => extraMinute != null && extraMinute! > 0
+      ? "$minute+$extraMinute'"
+      : "$minute'";
 
   factory MatchEvent.fromJson(Map<String, dynamic> json) {
     final time = json['time'] as Map<String, dynamic>? ?? const {};

@@ -20,9 +20,17 @@ class MatchesDateStrip extends StatelessWidget {
     final base = DateTime(today.year, today.month, today.day);
 
     final items = [
-      (label: 'Dün', sub: _weekday(base.subtract(const Duration(days: 1)).weekday), date: base.subtract(const Duration(days: 1))),
+      (
+        label: 'Dün',
+        sub: _weekday(base.subtract(const Duration(days: 1)).weekday),
+        date: base.subtract(const Duration(days: 1)),
+      ),
       (label: 'Bugün', sub: _dayNum(base), date: base),
-      (label: 'Yarın', sub: _weekday(base.add(const Duration(days: 1)).weekday), date: base.add(const Duration(days: 1))),
+      (
+        label: 'Yarın',
+        sub: _weekday(base.add(const Duration(days: 1)).weekday),
+        date: base.add(const Duration(days: 1)),
+      ),
     ];
 
     return Row(
@@ -164,11 +172,7 @@ class _CalendarPill extends StatelessWidget {
           color: ac.unselectedPill,
           border: Border.all(color: ac.cardBorder),
         ),
-        child: Icon(
-          Icons.calendar_month_rounded,
-          color: primary,
-          size: 20,
-        ),
+        child: Icon(Icons.calendar_month_rounded, color: primary, size: 20),
       ),
     );
   }

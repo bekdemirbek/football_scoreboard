@@ -29,16 +29,28 @@ class MatchLineupsTab extends StatelessWidget {
           child: LineupPitch(home: home, away: away),
         ),
         const SizedBox(height: 14),
-        _TeamBenchBlock(lineup: home, dotColor: const Color(0xFF2563EB), ac: ac),
+        _TeamBenchBlock(
+          lineup: home,
+          dotColor: const Color(0xFF2563EB),
+          ac: ac,
+        ),
         const SizedBox(height: 10),
-        _TeamBenchBlock(lineup: away, dotColor: const Color(0xFFE0A639), ac: ac),
+        _TeamBenchBlock(
+          lineup: away,
+          dotColor: const Color(0xFFE0A639),
+          ac: ac,
+        ),
       ],
     );
   }
 }
 
 class _FormationHeader extends StatelessWidget {
-  const _FormationHeader({required this.home, required this.away, required this.ac});
+  const _FormationHeader({
+    required this.home,
+    required this.away,
+    required this.ac,
+  });
 
   final TeamLineup home;
   final TeamLineup away;
@@ -48,9 +60,13 @@ class _FormationHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _TeamFormationTag(lineup: home, ac: ac, alignEnd: false)),
+        Expanded(
+          child: _TeamFormationTag(lineup: home, ac: ac, alignEnd: false),
+        ),
         const SizedBox(width: 10),
-        Expanded(child: _TeamFormationTag(lineup: away, ac: ac, alignEnd: true)),
+        Expanded(
+          child: _TeamFormationTag(lineup: away, ac: ac, alignEnd: true),
+        ),
       ],
     );
   }
@@ -155,7 +171,9 @@ class _TeamBenchBlock extends StatelessWidget {
           if (lineup.substitutes.isNotEmpty) ...[
             const SizedBox(height: 10),
             Theme(
-              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 minTileHeight: 32,
