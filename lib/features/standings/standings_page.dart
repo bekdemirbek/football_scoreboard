@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/app_theme.dart';
+import '../../models/favorite_team.dart';
 import '../../models/football_league.dart';
 import '../../models/match.dart';
 import '../../models/standing.dart';
@@ -325,8 +326,9 @@ class _StandingRow extends ConsumerWidget {
     final ac = Theme.of(context).extension<AppColors>()!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isFav =
-        ref.watch(favoriteTeamsProvider).value?.contains(standing.teamName) ??
-        false;
+        ref.watch(favoriteTeamsProvider.notifier).isFavoriteByName(
+          standing.teamName,
+        );
 
     // Zone detection (Premier League style — adapt as needed)
     final Color? zoneColor = standing.rank <= 4
@@ -344,8 +346,9 @@ class _StandingRow extends ConsumerWidget {
         : Colors.transparent;
 
     return InkWell(
-      onTap: () =>
-          ref.read(favoriteTeamsProvider.notifier).toggle(standing.teamName),
+      onTap: () => ref.read(favoriteTeamsProvider.notifier).toggle(
+        FavoriteTeam(id: standing.teamId, name: standing.teamName),
+      ),
       child: Container(
         height: 46,
         decoration: BoxDecoration(
@@ -575,8 +578,7 @@ class _KnockoutSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final knockout = ref.watch(knockoutMatchesProvider);
     final ac = Theme.of(context).extension<AppColors>()!;
-    final favorites =
-        ref.watch(favoriteTeamsProvider).value ?? const <String>{};
+    final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
 
     return knockout.when(
       loading: () => const SizedBox.shrink(),
@@ -622,8 +624,8 @@ class _KnockoutSection extends ConsumerWidget {
                   MatchCard(
                     match: match,
                     hasFavorite:
-                        favorites.contains(match.homeTeam) ||
-                        favorites.contains(match.awayTeam),
+                        favNotifier.isFavoriteByName(match.homeTeam) ||
+                        favNotifier.isFavoriteByName(match.awayTeam),
                     onTap: () => Navigator.of(
                       context,
                     ).push(FadeRoute(child: MatchDetailPage(match: match))),

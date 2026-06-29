@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/app_theme.dart';
+import '../../models/favorite_team.dart';
 import '../../models/match.dart';
 import '../../providers/api_providers.dart';
 import 'widgets/match_detail_sections.dart';
@@ -15,10 +16,9 @@ class MatchDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
-    final favorites =
-        ref.watch(favoriteTeamsProvider).value ?? const <String>{};
-    final homeFav = favorites.contains(match.homeTeam);
-    final awayFav = favorites.contains(match.awayTeam);
+    final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
+    final homeFav = favNotifier.isFavoriteByName(match.homeTeam);
+    final awayFav = favNotifier.isFavoriteByName(match.awayTeam);
     final detail = ref.watch(matchDetailProvider(match)).value;
 
     return Scaffold(
@@ -57,10 +57,16 @@ class MatchDetailPage extends ConsumerWidget {
                         detail: detail,
                         onToggleHome: () => ref
                             .read(favoriteTeamsProvider.notifier)
-                            .toggle(match.homeTeam),
+                            .toggle(FavoriteTeam(
+                              id: match.homeTeamId ?? '',
+                              name: match.homeTeam,
+                            )),
                         onToggleAway: () => ref
                             .read(favoriteTeamsProvider.notifier)
-                            .toggle(match.awayTeam),
+                            .toggle(FavoriteTeam(
+                              id: match.awayTeamId ?? '',
+                              name: match.awayTeam,
+                            )),
                       ),
                       const SizedBox(height: 16),
                       // ── Info Cards ──────────────────────────────────

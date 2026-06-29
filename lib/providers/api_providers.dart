@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/favorite_team.dart';
 import '../models/football_league.dart';
 import '../models/match.dart';
 import '../models/match_detail.dart';
@@ -168,33 +169,41 @@ class TeamsNotifier extends AsyncNotifier<List<Team>> {
 }
 
 final favoriteTeamsProvider =
-    AsyncNotifierProvider<FavoriteTeamsNotifier, Set<String>>(
+    AsyncNotifierProvider<FavoriteTeamsNotifier, List<FavoriteTeam>>(
       FavoriteTeamsNotifier.new,
     );
 
-class FavoriteTeamsNotifier extends AsyncNotifier<Set<String>> {
-  static const _storageKey = 'favorite_team_names';
+class FavoriteTeamsNotifier extends AsyncNotifier<List<FavoriteTeam>> {
+  static const _storageKey = 'favorite_teams_v2';
 
   @override
-  Future<Set<String>> build() async {
+  Future<List<FavoriteTeam>> build() async {
     final prefs = await SharedPreferences.getInstance();
-    return (prefs.getStringList(_storageKey) ?? const <String>[]).toSet();
+    final raw = prefs.getStringList(_storageKey) ?? const <String>[];
+    return FavoriteTeam.listFromPrefs(raw);
   }
 
-  Future<void> toggle(String teamName) async {
-    final current = {...(state.value ?? await build())};
-    if (current.contains(teamName)) {
-      current.remove(teamName);
+  Future<void> toggle(FavoriteTeam team) async {
+    final current = List<FavoriteTeam>.from(state.value ?? await build());
+    final idx = current.indexWhere((t) => t == team);
+    if (idx >= 0) {
+      current.removeAt(idx);
     } else {
-      current.add(teamName);
+      current.add(team);
     }
 
     state = AsyncData(current);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_storageKey, current.toList()..sort());
+    await prefs.setStringList(_storageKey, FavoriteTeam.listToPrefs(current));
   }
 
-  bool isFavorite(String teamName) {
-    return state.value?.contains(teamName) ?? false;
-  }
+  bool isFavorite(FavoriteTeam team) => state.value?.contains(team) ?? false;
+
+  bool isFavoriteByName(String name) =>
+      state.value?.any((t) => t.name == name) ?? false;
 }
+
+final teamMatchesProvider =
+    FutureProvider.family<List<Match>, String>((ref, teamId) {
+      return ref.read(apiServiceProvider).fetchTeamMatches(teamId);
+    });

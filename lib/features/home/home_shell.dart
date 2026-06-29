@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/app_theme.dart';
 import '../../providers/theme_provider.dart';
+import '../favorites/favorites_page.dart';
 import '../matches/matches_page.dart';
 import '../standings/standings_page.dart';
 
@@ -19,7 +20,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
-  static const _pages = [MatchesPage(), StandingsPage(), _ComingSoonPage()];
+  static const _pages = [MatchesPage(), StandingsPage(), FavoritesPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -281,63 +282,3 @@ class _ThemeToggleButton extends StatelessWidget {
   }
 }
 
-// ─── Coming Soon Page ──────────────────────────────────────────────────────────
-
-class _ComingSoonPage extends StatelessWidget {
-  const _ComingSoonPage();
-
-  @override
-  Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      ac.goldColor.withValues(alpha: 0.3),
-                      ac.goldColor.withValues(alpha: 0.1),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: ac.goldColor.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
-                child: Icon(Icons.star_rounded, color: ac.goldColor, size: 38),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Favoriler',
-                style: TextStyle(
-                  color: ac.textPrimary,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Yakında geliyor...',
-                style: TextStyle(
-                  color: ac.textSecondary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

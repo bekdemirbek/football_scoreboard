@@ -74,8 +74,7 @@ class _MatchesContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final selectedLeague = ref.watch(selectedLeagueProvider);
-    final favorites =
-        ref.watch(favoriteTeamsProvider).value ?? const <String>{};
+    final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
     final grouped = _groupByLeague(matches);
 
     return RefreshIndicator(
@@ -113,8 +112,8 @@ class _MatchesContent extends ConsumerWidget {
               MatchCard(
                 match: match,
                 hasFavorite:
-                    favorites.contains(match.homeTeam) ||
-                    favorites.contains(match.awayTeam),
+                    favNotifier.isFavoriteByName(match.homeTeam) ||
+                    favNotifier.isFavoriteByName(match.awayTeam),
                 onTap: () => Navigator.of(
                   context,
                 ).push(FadeRoute(child: MatchDetailPage(match: match))),

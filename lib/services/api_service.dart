@@ -124,6 +124,37 @@ class ApiService {
     return standings;
   }
 
+  Future<List<Match>> fetchTeamMatches(
+    String teamId, {
+    int pastDays = 45,
+    int futureDays = 45,
+  }) async {
+    final now = DateTime.now();
+    final from = _formatDate(now.subtract(Duration(days: pastDays)));
+    final to = _formatDate(now.add(Duration(days: futureDays)));
+
+    final response = await _get(
+      '/teams/$teamId/matches',
+      queryParameters: {'dateFrom': from, 'dateTo': to},
+    ).timeout(
+      const Duration(seconds: 12),
+      onTimeout: () =>
+          throw TimeoutException('API istegi zaman asimina ugradi.'),
+    );
+
+    final matches = _readList(response.data, preferredKeys: const ['matches'])
+        .map(Match.fromJson)
+        .toList(growable: false);
+
+    matches.sort((a, b) {
+      final aDate = a.date ?? DateTime(0);
+      final bDate = b.date ?? DateTime(0);
+      return aDate.compareTo(bDate);
+    });
+
+    return matches;
+  }
+
   Future<List<Match>> fetchKnockoutMatches({String? leagueId}) async {
     final code = _competitionCode(leagueId);
     final response = await _get('/competitions/$code/matches');

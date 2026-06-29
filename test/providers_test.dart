@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:football_scoreboard/models/favorite_team.dart';
 import 'package:football_scoreboard/models/football_league.dart';
 import 'package:football_scoreboard/providers/api_providers.dart';
 import 'package:football_scoreboard/services/api_service.dart';
@@ -40,11 +41,12 @@ void main() {
     addTearDown(container.dispose);
 
     await container.read(favoriteTeamsProvider.future);
-    await container.read(favoriteTeamsProvider.notifier).toggle('Arsenal FC');
+    const arsenal = FavoriteTeam(id: '57', name: 'Arsenal FC');
+    await container.read(favoriteTeamsProvider.notifier).toggle(arsenal);
 
-    expect(container.read(favoriteTeamsProvider).value, {'Arsenal FC'});
+    expect(container.read(favoriteTeamsProvider).value!.map((t) => t.name), contains('Arsenal FC'));
 
-    await container.read(favoriteTeamsProvider.notifier).toggle('Arsenal FC');
+    await container.read(favoriteTeamsProvider.notifier).toggle(arsenal);
 
     expect(container.read(favoriteTeamsProvider).value, isEmpty);
   });
