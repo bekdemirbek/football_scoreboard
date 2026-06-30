@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../models/football_league.dart';
 import '../models/match.dart';
+import '../models/scorer.dart';
 import '../models/standing.dart';
 import '../models/team.dart';
 
@@ -122,6 +123,29 @@ class ApiService {
       );
     }
     return standings;
+  }
+
+  Future<List<Scorer>> fetchScorers({String? leagueId, int limit = 20}) async {
+    final code = _competitionCode(leagueId);
+    final response = await _get(
+      '/competitions/$code/scorers',
+      queryParameters: {'limit': limit},
+    ).timeout(
+      const Duration(seconds: 12),
+      onTimeout: () =>
+          throw TimeoutException('API istegi zaman asimina ugradi.'),
+    );
+
+    final raw = _readList(
+      response.data,
+      preferredKeys: const ['scorers'],
+    );
+
+    return raw
+        .asMap()
+        .entries
+        .map((e) => Scorer.fromJson(e.value, rank: e.key + 1))
+        .toList(growable: false);
   }
 
   Future<List<Match>> fetchTeamMatches(

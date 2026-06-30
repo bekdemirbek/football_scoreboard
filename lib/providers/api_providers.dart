@@ -5,6 +5,7 @@ import '../models/favorite_team.dart';
 import '../models/football_league.dart';
 import '../models/match.dart';
 import '../models/match_detail.dart';
+import '../models/scorer.dart';
 import '../models/standing.dart';
 import '../models/team.dart';
 import '../services/api_football_service.dart';
@@ -207,3 +208,39 @@ final teamMatchesProvider =
     FutureProvider.family<List<Match>, String>((ref, teamId) {
       return ref.read(apiServiceProvider).fetchTeamMatches(teamId);
     });
+
+// ─── Scorers ───────────────────────────────────────────────────────────────────
+
+final selectedScorersLeagueProvider =
+    NotifierProvider<SelectedScorersLeagueNotifier, FootballLeague>(
+      SelectedScorersLeagueNotifier.new,
+    );
+
+class SelectedScorersLeagueNotifier extends Notifier<FootballLeague> {
+  @override
+  FootballLeague build() => footballLeagues.firstWhere(
+    (l) => l.id == 'PL',
+    orElse: () => footballLeagues.first,
+  );
+
+  void selectLeague(FootballLeague league) {
+    if (league.id == null) return;
+    state = league;
+  }
+}
+
+final scorersProvider =
+    AsyncNotifierProvider<ScorersNotifier, List<Scorer>>(ScorersNotifier.new);
+
+class ScorersNotifier extends AsyncNotifier<List<Scorer>> {
+  @override
+  Future<List<Scorer>> build() {
+    final league = ref.watch(selectedScorersLeagueProvider);
+    return ref.read(apiServiceProvider).fetchScorers(leagueId: league.id);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(build);
+  }
+}

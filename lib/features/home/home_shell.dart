@@ -7,6 +7,7 @@ import '../../core/app_theme.dart';
 import '../../providers/theme_provider.dart';
 import '../favorites/favorites_page.dart';
 import '../matches/matches_page.dart';
+import '../scorers/scorers_page.dart';
 import '../standings/standings_page.dart';
 
 class HomeShell extends ConsumerStatefulWidget {
@@ -20,7 +21,12 @@ class _HomeShellState extends ConsumerState<HomeShell>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
-  static const _pages = [MatchesPage(), StandingsPage(), FavoritesPage()];
+  static const _pages = [
+    MatchesPage(),
+    StandingsPage(),
+    ScorersPage(),
+    FavoritesPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +94,11 @@ class _PremiumNavBar extends ConsumerWidget {
       label: 'Maçlar',
     ),
     (icon: Icons.bar_chart_outlined, active: Icons.bar_chart, label: 'Puan T.'),
+    (
+      icon: Icons.emoji_events_outlined,
+      active: Icons.emoji_events,
+      label: 'Gol K.',
+    ),
     (
       icon: Icons.star_border_rounded,
       active: Icons.star_rounded,

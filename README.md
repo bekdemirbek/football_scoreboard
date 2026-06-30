@@ -16,9 +16,9 @@ statistics — built with Riverpod and two free public football APIs.
 
 ## Screenshots
 
-| Matches | Standings (grouped) | Match detail — lineup pitch |
-|---|---|---|
-| ![Matches](docs/screenshots/matches.png) | ![Standings](docs/screenshots/standings.png) | ![Match detail](docs/screenshots/match_detail.png) |
+| Matches | Standings | Gol Krallığı | Match detail |
+|---|---|---|---|
+| ![Matches](docs/screenshots/matches.png) | ![Standings](docs/screenshots/standings.png) | ![Scorers](docs/screenshots/scorers.png) | ![Match detail](docs/screenshots/match_detail.png) |
 
 *(Add your own screenshots to `docs/screenshots/` — see the filenames above.)*
 
@@ -30,13 +30,17 @@ statistics — built with Riverpod and two free public football APIs.
   colors; tournaments with multiple groups (e.g. the World Cup) render each
   group as its own table, plus a knockout-bracket section (Last 32 → Final)
   once the group stage is over.
+- **Gol Krallığı (Top Scorers)** — animated leaderboard per league: gold /
+  silver / bronze podium cards with pulsing glow badges, animated goal
+  progress bars, and staggered slide-in entrance for every row.
 - **Match detail** — a tabbed view per match:
   - **Maç** — full event timeline (goals with scorer + assist, cards,
     substitutions)
   - **Kadro** — both starting XIs drawn on an actual pitch diagram, positioned
     from the API's formation grid, plus substitutes and the coach
   - **İstatistik** — possession, shots, cards, etc. as home-vs-away bars
-- **Favoriler** — persisted favorite teams (SharedPreferences).
+- **Favoriler** — persisted favorite teams with per-team match history sheet
+  (recent 5 + upcoming 3 matches, tap-to-open profile).
 - **Dark / light theme** with a custom `ThemeExtension` for the app's
   football-specific palette (live red, gold, zone colors).
 
@@ -51,9 +55,11 @@ lib/
 ├── services/         # HTTP clients (football-data.org, API-Football)
 ├── providers/        # Riverpod Notifiers — the "ViewModel" layer
 └── features/
-    ├── home/        # Bottom-nav shell
+    ├── home/        # Bottom-nav shell (4 tabs)
     ├── matches/      # Match list + match detail (events/lineups/stats tabs)
-    └── standings/    # League table + knockout bracket
+    ├── standings/    # League table + knockout bracket
+    ├── scorers/      # Top scorers leaderboard with animations
+    └── favorites/    # Favorite teams + per-team match history sheet
 ```
 
 - **State management:** `flutter_riverpod` — `AsyncNotifierProvider` for
@@ -127,6 +133,6 @@ calls), the match-detail page's loading/empty/data states, and golden
 
 ## Roadmap
 
-- [ ] Full **Favoriler** tab: live/recent/upcoming matches for favorited teams
-- [ ] **Gol Kralları** (top scorers) page
-- [ ] Local caching for offline support
+- [x] Full **Favoriler** tab: recent/upcoming matches + team profile sheet
+- [x] **Gol Krallığı** (top scorers) animated leaderboard
+- [ ] Local caching for offline support (Hive TTL cache)
