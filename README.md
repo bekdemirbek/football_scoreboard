@@ -14,18 +14,13 @@ Riverpod on top of two real public football APIs.
 > team **abbreviations instead of logos**, gradient-bordered cards, skeleton
 > loaders, and an explicit loading / error / empty state on every async screen.
 
-## Screenshots / Demo
-
-<!-- Add a short screen recording here — it's the fastest way for a reviewer to
-     grasp the app. Record on device/emulator, drop the file in docs/ and link it: -->
-
-![Demo](docs/demo.gif)
-
-| Canlı Skorlar | Puan Durumu | Gol/Asist Krallığı | Futbol Quiz |
-|---|---|---|---|
-| ![Matches](docs/screenshots/matches.png) | ![Standings](docs/screenshots/standings.png) | ![Scorers](docs/screenshots/scorers.png) | ![Quiz](docs/screenshots/quiz.png) |
-
-*(Drop your own captures into `docs/screenshots/`.)*
+<!-- Screenshots / demo GIF — add later:
+     capture the app, drop files in docs/, then restore this section, e.g.
+     ![Demo](docs/demo.gif)
+     | Canlı Skorlar | Puan Durumu | Gol/Asist Krallığı | Futbol Quiz |
+     |---|---|---|---|
+     | ![](docs/screenshots/matches.png) | ![](docs/screenshots/standings.png) | ![](docs/screenshots/scorers.png) | ![](docs/screenshots/quiz.png) |
+-->
 
 ## Features
 
