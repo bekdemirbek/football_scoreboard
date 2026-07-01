@@ -10,12 +10,7 @@ class TeamBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final palette = _paletteFor(teamName);
-    final initials = teamName
-        .split(' ')
-        .where((p) => p.isNotEmpty)
-        .take(2)
-        .map((p) => p[0].toUpperCase())
-        .join();
+    final initials = _abbreviation(teamName);
 
     return Container(
       width: size,
@@ -47,16 +42,33 @@ class TeamBadge extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontSize: size <= 22
-              ? 7.5
+              ? 8.5
               : size <= 28
-              ? 10
-              : 12,
+              ? 10.5
+              : 12.5,
           fontWeight: FontWeight.w900,
           letterSpacing: -0.3,
           shadows: const [Shadow(color: Colors.black26, blurRadius: 4)],
         ),
       ),
     );
+  }
+
+  /// Takım adından kısaltma üretir (logo yerine).
+  /// Tek kelime → ilk 3 harf (GALATASARAY → GAL),
+  /// çok kelime → kelime baş harfleri (Adana Demirspor → AD).
+  static String _abbreviation(String name) {
+    final words = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
+    if (words.isEmpty) return '?';
+    if (words.length == 1) {
+      final w = words.first;
+      return w.substring(0, w.length >= 3 ? 3 : w.length).toUpperCase();
+    }
+    return words.take(3).map((w) => w[0].toUpperCase()).join();
   }
 
   _BadgePalette _paletteFor(String value) {

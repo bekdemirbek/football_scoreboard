@@ -13,74 +13,50 @@ class MatchLineupsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _FormationHeader(home: home, away: away, ac: ac),
+        _FormationHeader(home: home, away: away),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: ac.cardBorder),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           clipBehavior: Clip.antiAlias,
           child: LineupPitch(home: home, away: away),
         ),
         const SizedBox(height: 14),
-        _TeamBenchBlock(
-          lineup: home,
-          dotColor: const Color(0xFF2563EB),
-          ac: ac,
-        ),
+        _TeamBenchBlock(lineup: home),
         const SizedBox(height: 10),
-        _TeamBenchBlock(
-          lineup: away,
-          dotColor: const Color(0xFFE0A639),
-          ac: ac,
-        ),
+        _TeamBenchBlock(lineup: away),
       ],
     );
   }
 }
 
 class _FormationHeader extends StatelessWidget {
-  const _FormationHeader({
-    required this.home,
-    required this.away,
-    required this.ac,
-  });
+  const _FormationHeader({required this.home, required this.away});
 
   final TeamLineup home;
   final TeamLineup away;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: _TeamFormationTag(lineup: home, ac: ac, alignEnd: false),
-        ),
+        Expanded(child: _TeamFormationTag(lineup: home, alignEnd: false)),
         const SizedBox(width: 10),
-        Expanded(
-          child: _TeamFormationTag(lineup: away, ac: ac, alignEnd: true),
-        ),
+        Expanded(child: _TeamFormationTag(lineup: away, alignEnd: true)),
       ],
     );
   }
 }
 
 class _TeamFormationTag extends StatelessWidget {
-  const _TeamFormationTag({
-    required this.lineup,
-    required this.ac,
-    required this.alignEnd,
-  });
+  const _TeamFormationTag({required this.lineup, required this.alignEnd});
 
   final TeamLineup lineup;
-  final AppColors ac;
   final bool alignEnd;
 
   @override
@@ -94,8 +70,8 @@ class _TeamFormationTag extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: alignEnd ? TextAlign.end : TextAlign.start,
-          style: TextStyle(
-            color: ac.textPrimary,
+          style: const TextStyle(
+            color: AppColors.textPrimary,
             fontSize: 13,
             fontWeight: FontWeight.w800,
           ),
@@ -107,23 +83,17 @@ class _TeamFormationTag extends StatelessWidget {
 }
 
 class _TeamBenchBlock extends StatelessWidget {
-  const _TeamBenchBlock({
-    required this.lineup,
-    required this.dotColor,
-    required this.ac,
-  });
+  const _TeamBenchBlock({required this.lineup});
 
   final TeamLineup lineup;
-  final Color dotColor;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ac.cardBorder),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -138,8 +108,8 @@ class _TeamBenchBlock extends StatelessWidget {
                   lineup.teamName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: ac.textPrimary,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                   ),
@@ -159,8 +129,8 @@ class _TeamBenchBlock extends StatelessWidget {
                     '${player.number ?? ''}  ${player.name}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: ac.textPrimary,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -179,8 +149,8 @@ class _TeamBenchBlock extends StatelessWidget {
                 minTileHeight: 32,
                 title: Text(
                   'Yedekler (${lineup.substitutes.length})',
-                  style: TextStyle(
-                    color: ac.textSecondary,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -198,8 +168,8 @@ class _TeamBenchBlock extends StatelessWidget {
                             '${player.number ?? ''}  ${player.name}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: ac.textSecondary,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
@@ -215,8 +185,8 @@ class _TeamBenchBlock extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Teknik Direktör: ${lineup.coachName}',
-              style: TextStyle(
-                color: ac.textTertiary,
+              style: const TextStyle(
+                color: AppColors.textTertiary,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),

@@ -1,0 +1,817 @@
+[
+  {
+    "id": "q001",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "İlk FIFA Dünya Kupası hangi yıl düzenlenmiştir?",
+    "options": ["1930", "1934", "1950", "1928"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q002",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "İlk Dünya Kupası'nı kazanan ülke hangisidir?",
+    "options": ["Uruguay", "Brezilya", "İtalya", "Arjantin"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q003",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "Dünya Kupası'nı en çok kazanan ülke hangisidir?",
+    "options": ["Brezilya", "Almanya", "İtalya", "Arjantin"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q004",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "2014 Dünya Kupası hangi ülkede düzenlenmiştir?",
+    "options": ["Brezilya", "Almanya", "Güney Afrika", "Rusya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q005",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "2018 Dünya Kupası hangi ülkede düzenlenmiştir?",
+    "options": ["Rusya", "Katar", "Brezilya", "Fransa"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q006",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "2022 Dünya Kupası hangi ülkede düzenlenmiştir?",
+    "options": ["Katar", "Rusya", "BAE", "Suudi Arabistan"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q007",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "2022 Dünya Kupası finalinde Arjantin hangi ülkeyi penaltılarla geçmiştir?",
+    "options": ["Fransa", "Hırvatistan", "Hollanda", "Brezilya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q008",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "Türkiye Milli Takımı'nın en iyi Dünya Kupası derecesi hangisidir?",
+    "options": ["Üçüncülük (2002)", "İkincilik", "Şampiyonluk", "Çeyrek final"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q009",
+    "category": "Dünya Kupası",
+    "difficulty": "hard",
+    "question": "1950 Dünya Kupası finalinde Brezilya'yı şaşırtarak şampiyon olan ülke hangisidir?",
+    "options": ["Uruguay", "Arjantin", "İtalya", "İspanya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q010",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "Dünya Kupası'nda bir maçta en çok gol atan oyuncu olarak bilinen ve 1958'de 17 yaşında şampiyon olan oyuncu kimdir?",
+    "options": ["Pele", "Garrincha", "Didi", "Vava"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q011",
+    "category": "Dünya Kupası",
+    "difficulty": "easy",
+    "question": "Dünya Kupası kaç yılda bir düzenlenir?",
+    "options": ["4 yıl", "2 yıl", "3 yıl", "5 yıl"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q012",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "2010 Dünya Kupası'nı kazanan ülke hangisidir?",
+    "options": ["İspanya", "Hollanda", "Almanya", "Brezilya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q013",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "Dünya Kupası tarihinde ilk kez 48 takımla oynanması planlanan turnuva hangisidir?",
+    "options": ["2026 Dünya Kupası", "2022 Dünya Kupası", "2030 Dünya Kupası", "2034 Dünya Kupası"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q014",
+    "category": "Dünya Kupası",
+    "difficulty": "hard",
+    "question": "Bir Dünya Kupası finalinde hat-trick yapan tek oyuncu kimdir?",
+    "options": ["Geoff Hurst", "Pele", "Mario Götze", "Zinedine Zidane"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q015",
+    "category": "Dünya Kupası",
+    "difficulty": "medium",
+    "question": "2026 Dünya Kupası'na ev sahipliği yapacak ülkeler hangileridir?",
+    "options": ["ABD, Kanada, Meksika", "ABD, Brezilya, Kanada", "Meksika, Kanada, Arjantin", "ABD, Meksika, Küba"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q016",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Real Madrid'in kurulduğu yıl nedir?",
+    "options": ["1902", "1910", "1899", "1920"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q017",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Şampiyonlar Ligi'ni en çok kazanan kulüp hangisidir?",
+    "options": ["Real Madrid", "Bayern Münih", "AC Milan", "Liverpool"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q018",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Manchester United'ın stadının adı nedir?",
+    "options": ["Old Trafford", "Anfield", "Etihad", "Stamford Bridge"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q019",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Barcelona'nın stadının adı nedir?",
+    "options": ["Camp Nou", "Santiago Bernabeu", "Wanda Metropolitano", "Mestalla"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q020",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Bayern Münih hangi şehirde kuruludur?",
+    "options": ["Münih", "Berlin", "Dortmund", "Hamburg"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q021",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Boca Juniors hangi ülkenin kulübüdür?",
+    "options": ["Arjantin", "Brezilya", "Uruguay", "Şili"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q022",
+    "category": "Kulüpler",
+    "difficulty": "hard",
+    "question": "İtalya'da en çok Scudetto (lig şampiyonluğu) kazanan kulüp hangisidir?",
+    "options": ["Juventus", "AC Milan", "Inter", "Napoli"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q023",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Ajax hangi ülkenin kulübüdür?",
+    "options": ["Hollanda", "Belçika", "Almanya", "Danimarka"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q024",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Premier Lig tarihinde rakibine yenilmeden şampiyon olan ilk takım hangisidir?",
+    "options": ["Arsenal (2003-04)", "Manchester United", "Chelsea", "Liverpool"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q025",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Galatasaray'ın renkleri nelerdir?",
+    "options": ["Sarı-Kırmızı", "Kırmızı-Beyaz", "Lacivert-Sarı", "Siyah-Beyaz"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q026",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Fenerbahçe'nin renkleri nelerdir?",
+    "options": ["Sarı-Lacivert", "Kırmızı-Beyaz", "Sarı-Kırmızı", "Siyah-Beyaz"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q027",
+    "category": "Kulüpler",
+    "difficulty": "easy",
+    "question": "Beşiktaş'ın renkleri nelerdir?",
+    "options": ["Siyah-Beyaz", "Sarı-Lacivert", "Kırmızı-Beyaz", "Mavi-Sarı"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q028",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Şampiyonlar Ligi'nde rakibine yenilmeden şampiyon olan az sayıdaki takımdan biri olan ve 2019-20'de bunu başaran kulüp hangisidir?",
+    "options": ["Bayern Münih", "Liverpool", "Real Madrid", "PSG"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q029",
+    "category": "Kulüpler",
+    "difficulty": "hard",
+    "question": "Avrupa'da bir sezonda yenilgisiz lig şampiyonluğu yaşayan nadir kulüplerden, İtalya'da bunu 1991-92 sezonunda başaran takım hangisidir?",
+    "options": ["AC Milan", "Juventus", "Napoli", "Inter"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q030",
+    "category": "Kulüpler",
+    "difficulty": "medium",
+    "question": "Liverpool'un taraftarlarının söylediği ünlü marş hangisidir?",
+    "options": ["You'll Never Walk Alone", "We Are the Champions", "Glory Glory", "Allez Allez Allez"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q031",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "easy",
+    "question": "Kariyeri boyunca en çok Ballon d'Or ödülü kazanan oyuncu kimdir?",
+    "options": ["Lionel Messi", "Cristiano Ronaldo", "Pele", "Diego Maradona"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q032",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Cristiano Ronaldo hangi ülke vatandaşıdır?",
+    "options": ["Portekiz", "İspanya", "Brezilya", "İtalya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q033",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Lionel Messi profesyonel kariyerine hangi kulüpte başlamıştır?",
+    "options": ["Barcelona", "River Plate", "Boca Juniors", "Newell's Old Boys"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q034",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "hard",
+    "question": "1986 Dünya Kupası'nda 'Tanrının Eli' golünü atan oyuncu kimdir?",
+    "options": ["Diego Maradona", "Pele", "Romario", "Gabriel Batistuta"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q035",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "'Üç Kez Dünya Kupası Şampiyonu' olan tek oyuncu kimdir?",
+    "options": ["Pele", "Maradona", "Zidane", "Ronaldinho"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q036",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "hard",
+    "question": "Bir takvim yılında en çok gol atma rekoru (91 gol, 2012) kime aittir?",
+    "options": ["Lionel Messi", "Cristiano Ronaldo", "Gerd Müller", "Robert Lewandowski"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q037",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Zinedine Zidane hangi ülke milli takımında oynamıştır?",
+    "options": ["Fransa", "Cezayir", "İspanya", "İtalya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q038",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "easy",
+    "question": "'CR7' lakabıyla bilinen futbolcu kimdir?",
+    "options": ["Cristiano Ronaldo", "Carlos Ronaldo", "Cristian Rodrigues", "Carlo Ronaldinho"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q039",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Hollandalı efsane Johan Cruyff'un futbola kazandırdığı taktik hangisidir?",
+    "options": ["Total Football (Total Voetbal)", "Catenaccio", "Tiki-Taka", "Gegenpressing"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q040",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "hard",
+    "question": "Tarihte bir sezonda en çok gol atan oyuncu (91 gol, Avrupa kupaları dahil) hangi kulüpte oynarken bu rekoru kırmıştır?",
+    "options": ["Barcelona", "Real Madrid", "Bayern Münih", "Juventus"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q041",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Brezilyalı efsane Pele'nin gerçek adı nedir?",
+    "options": ["Edson Arantes do Nascimento", "Edson Cholbi Nascimento", "Pedro Arantes", "Eduardo Nascimento"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q042",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Tüm büyük kulüp ve milli takım kupalarını kazanarak 'Career Grand Slam' başarısını tamamlayan oyunculardan biri kimdir?",
+    "options": ["Andres Iniesta", "Wayne Rooney", "Frank Lampard", "Steven Gerrard"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q043",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "easy",
+    "question": "Neymar hangi ülke vatandaşıdır?",
+    "options": ["Brezilya", "Arjantin", "Portekiz", "Uruguay"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q044",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "medium",
+    "question": "Kylian Mbappé hangi ülke milli takımında forma giymektedir?",
+    "options": ["Fransa", "Kamerun", "Cezayir", "Belçika"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q045",
+    "category": "Oyuncular ve Rekorlar",
+    "difficulty": "hard",
+    "question": "Hızıyla öne çıkan Kylian Mbappé'nin lakaplarından biri hangisidir?",
+    "options": ["Donatello", "Flash", "Rocket", "Bullet"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q046",
+    "category": "Kurallar",
+    "difficulty": "easy",
+    "question": "Bir futbol maçı normal şartlarda kaç dakikadır?",
+    "options": ["90 dakika", "80 dakika", "100 dakika", "120 dakika"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q047",
+    "category": "Kurallar",
+    "difficulty": "easy",
+    "question": "Bir takım kaç oyuncuyla sahaya çıkar?",
+    "options": ["11", "10", "12", "9"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q048",
+    "category": "Kurallar",
+    "difficulty": "medium",
+    "question": "Ofsayt kuralı temel olarak neyi ifade eder?",
+    "options": [
+      "Top oynandığı anda hücum oyuncusunun savunmadan geride kalmaması",
+      "Topun taca çıkması",
+      "Oyuncunun kale sahasına girmesi",
+      "Kalecinin eliyle topu oynaması"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "q049",
+    "category": "Kurallar",
+    "difficulty": "medium",
+    "question": "VAR (Video Yardımcı Hakem) sistemi ilk kez resmi bir Dünya Kupası'nda hangi yılda kullanılmıştır?",
+    "options": ["2018", "2014", "2010", "2022"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q050",
+    "category": "Kurallar",
+    "difficulty": "easy",
+    "question": "Bir oyuncu bir maçta kaç sarı kart görürse kırmızı kart görmüş sayılır?",
+    "options": ["2", "1", "3", "4"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q051",
+    "category": "Kurallar",
+    "difficulty": "medium",
+    "question": "Penaltı noktası kale çizgisine kaç metre uzaklıktadır?",
+    "options": ["11 metre", "9 metre", "12 metre", "10 metre"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q052",
+    "category": "Kurallar",
+    "difficulty": "medium",
+    "question": "Bir futbol sahasının standart genişliği FIFA kurallarına göre yaklaşık kaç metredir?",
+    "options": ["64-75 metre", "50-60 metre", "80-90 metre", "45-55 metre"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q053",
+    "category": "Kurallar",
+    "difficulty": "easy",
+    "question": "Maç sırasında kalecinin elle dokunabileceği alan hangisidir?",
+    "options": ["Ceza sahası", "Orta saha", "Tüm saha", "Sadece kale çizgisi"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q054",
+    "category": "Kurallar",
+    "difficulty": "hard",
+    "question": "Bir takımın aynı anda sahada kaç yabancı oyuncu bulundurabileceği neye göre belirlenir?",
+    "options": ["Ligin kendi yönetmeliğine göre değişir", "FIFA tarafından sabit olarak belirlenir", "Her zaman 5 kişidir", "UEFA tarafından sabittir"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q055",
+    "category": "Kurallar",
+    "difficulty": "medium",
+    "question": "Bir maçta uzatma dakikaları neye göre belirlenir?",
+    "options": [
+      "Hakemin kaybedilen süreyi hesaplaması",
+      "Sabit olarak her zaman 5 dakikadır",
+      "Sadece sakatlık süresine göre",
+      "Takımların oylamasıyla"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "q056",
+    "category": "Türkiye Futbolu",
+    "difficulty": "easy",
+    "question": "Türkiye'nin en eski spor kulübü olarak bilinen kulüp hangisidir?",
+    "options": ["Beşiktaş", "Galatasaray", "Fenerbahçe", "Altay"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q057",
+    "category": "Türkiye Futbolu",
+    "difficulty": "medium",
+    "question": "Galatasaray hangi yılda UEFA Kupası'nı kazanmıştır?",
+    "options": ["2000", "1998", "2002", "1996"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q058",
+    "category": "Türkiye Futbolu",
+    "difficulty": "medium",
+    "question": "Türkiye Milli Takımı 2002 Dünya Kupası'nda kaçıncı olmuştur?",
+    "options": ["Üçüncü", "İkinci", "Dördüncü", "Çeyrek finalist"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q059",
+    "category": "Türkiye Futbolu",
+    "difficulty": "easy",
+    "question": "Türkiye'nin en üst düzey futbol ligi hangisidir?",
+    "options": ["Süper Lig", "1. Lig", "TFF Lig", "Spor Toto Ligi"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q060",
+    "category": "Türkiye Futbolu",
+    "difficulty": "hard",
+    "question": "Hakan Şükür'ün 2002 Dünya Kupası'nda Güney Kore'ye karşı attığı gol kaçıncı saniyede atılarak rekor kırmıştır?",
+    "options": ["11. saniye", "20. saniye", "5. saniye", "30. saniye"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q061",
+    "category": "Türkiye Futbolu",
+    "difficulty": "medium",
+    "question": "Trabzonspor kaç kez Süper Lig şampiyonluğu yaşamıştır (2024 itibarıyla)?",
+    "options": ["8", "5", "10", "3"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q062",
+    "category": "Türkiye Futbolu",
+    "difficulty": "medium",
+    "question": "Türkiye Milli Takımı'na 2002 Dünya Kupası'nda üçüncülük getiren teknik direktör kimdir?",
+    "options": ["Şenol Güneş", "Fatih Terim", "Mustafa Denizli", "Abdullah Avcı"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q063",
+    "category": "Türkiye Futbolu",
+    "difficulty": "easy",
+    "question": "Kıtalararası Derbi olarak da bilinen rekabet hangi iki takım arasındadır?",
+    "options": ["Fenerbahçe - Galatasaray", "Galatasaray - Beşiktaş", "Beşiktaş - Fenerbahçe", "Trabzonspor - Galatasaray"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q064",
+    "category": "Türkiye Futbolu",
+    "difficulty": "hard",
+    "question": "Süper Lig'de bir sezonda gol rekorları kıran ve Galatasaray forması giyen efsane golcü kimdir?",
+    "options": ["Mario Jardel", "Hakan Şükür", "Bülent Korkmaz", "Tuncay Şanlı"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q065",
+    "category": "Türkiye Futbolu",
+    "difficulty": "medium",
+    "question": "Fatih Terim'in en bilinen lakabı nedir?",
+    "options": ["İmparator", "Kral", "Aslan", "Komutan"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q066",
+    "category": "Avrupa Ligleri",
+    "difficulty": "easy",
+    "question": "İngiltere'nin en üst düzey futbol ligi hangisidir?",
+    "options": ["Premier Lig", "Championship", "League One", "FA Cup"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q067",
+    "category": "Avrupa Ligleri",
+    "difficulty": "easy",
+    "question": "İspanya'nın en üst düzey futbol ligi hangisidir?",
+    "options": ["LaLiga", "Segunda Division", "Copa del Rey", "Supercopa"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q068",
+    "category": "Avrupa Ligleri",
+    "difficulty": "easy",
+    "question": "Almanya'nın en üst düzey futbol ligi hangisidir?",
+    "options": ["Bundesliga", "2. Bundesliga", "DFB Pokal", "Regionalliga"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q069",
+    "category": "Avrupa Ligleri",
+    "difficulty": "easy",
+    "question": "İtalya'nın en üst düzey futbol ligi hangisidir?",
+    "options": ["Serie A", "Serie B", "Coppa Italia", "Serie C"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q070",
+    "category": "Avrupa Ligleri",
+    "difficulty": "easy",
+    "question": "Fransa'nın en üst düzey futbol ligi hangisidir?",
+    "options": ["Ligue 1", "Ligue 2", "Coupe de France", "National"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q071",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Bundesliga'da en çok şampiyonluk kazanan kulüp hangisidir?",
+    "options": ["Bayern Münih", "Borussia Dortmund", "Schalke 04", "Werder Bremen"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q072",
+    "category": "Avrupa Ligleri",
+    "difficulty": "hard",
+    "question": "Premier Lig tarihinde bir sezonda en çok puan toplama rekoru (100 puan) hangi kulübe aittir?",
+    "options": ["Manchester City (2017-18)", "Liverpool", "Chelsea", "Manchester United"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q073",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Şampiyonlar Ligi'nin eski adı nedir?",
+    "options": ["Avrupa Şampiyon Kulüpler Kupası", "UEFA Kupası", "Kıtalararası Kupa", "Avrupa Kupa Galipleri Kupası"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q074",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Avrupa'nın en eski futbol ligi hangisidir?",
+    "options": ["İngiltere Premier Lig (eski adıyla Football League)", "İspanya LaLiga", "İtalya Serie A", "Almanya Bundesliga"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q075",
+    "category": "Avrupa Ligleri",
+    "difficulty": "hard",
+    "question": "El Clasico hangi iki takım arasında oynanan maçtır?",
+    "options": ["Real Madrid - Barcelona", "Real Madrid - Atletico Madrid", "Barcelona - Sevilla", "Real Madrid - Valencia"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q076",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Manchester'da oynanan ve şehir derbisi olarak bilinen maç hangi iki takım arasındadır?",
+    "options": ["Manchester United - Manchester City", "Manchester United - Liverpool", "Manchester City - Liverpool", "Manchester United - Everton"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q077",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Milano şehrinde oynanan ve iki büyük kulüp arasındaki derbiye verilen isim nedir?",
+    "options": ["Derby della Madonnina", "Derby d'Italia", "Derby della Capitale", "Derby di Torino"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q078",
+    "category": "Avrupa Ligleri",
+    "difficulty": "hard",
+    "question": "UEFA Avrupa Ligi'nin eski adı nedir?",
+    "options": ["UEFA Kupası", "Kupa Galipleri Kupası", "Intertoto Kupası", "UEFA Süper Kupası"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q079",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Hollanda'nın en üst düzey futbol ligi hangisidir?",
+    "options": ["Eredivisie", "Eerste Divisie", "KNVB Cup", "Jupiler League"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q080",
+    "category": "Avrupa Ligleri",
+    "difficulty": "medium",
+    "question": "Portekiz'in en üst düzey futbol ligi hangisidir?",
+    "options": ["Primeira Liga", "Segunda Liga", "Taça de Portugal", "Liga Sagres"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q081",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "'Futbolun kuralları' ilk kez hangi ülkede resmi olarak yazıya dökülmüştür?",
+    "options": ["İngiltere", "İskoçya", "Fransa", "İspanya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q082",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "FIFA'nın açılımı nedir?",
+    "options": [
+      "Federation Internationale de Football Association",
+      "Federal International Football Association",
+      "Football International Federation Association",
+      "Federation of International Football Athletes"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "q083",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "easy",
+    "question": "FIFA hangi yılda kurulmuştur?",
+    "options": ["1904", "1900", "1910", "1920"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q084",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "UEFA hangi yılda kurulmuştur?",
+    "options": ["1954", "1950", "1960", "1945"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q085",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "hard",
+    "question": "Tarihin ilk uluslararası resmi futbol maçı hangi iki ülke arasında oynanmıştır?",
+    "options": ["İskoçya - İngiltere", "İngiltere - Galler", "Fransa - Belçika", "İtalya - İspanya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q086",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "Altın Top (Ballon d'Or) ödülü ilk kez hangi yılda verilmiştir?",
+    "options": ["1956", "1960", "1950", "1965"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q087",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "hard",
+    "question": "İlk Ballon d'Or ödülünü kazanan oyuncu kimdir?",
+    "options": ["Stanley Matthews", "Pele", "Alfredo Di Stefano", "Lev Yashin"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q088",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "Tek kaleci olarak Ballon d'Or kazanan oyuncu kimdir?",
+    "options": ["Lev Yashin", "Gianluigi Buffon", "Iker Casillas", "Manuel Neuer"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q089",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "Wembley Stadyumu hangi ülkededir?",
+    "options": ["İngiltere", "İskoçya", "İrlanda", "Galler"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q090",
+    "category": "Tarih ve Efsaneler",
+    "difficulty": "medium",
+    "question": "Dünyanın en yüksek kapasiteli stadyumlarından biri olan Maracana hangi ülkededir?",
+    "options": ["Brezilya", "Arjantin", "Şili", "Kolombiya"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q091",
+    "category": "Genel Kültür",
+    "difficulty": "easy",
+    "question": "Futbolda bir oyuncunun aynı maçta 3 gol atmasına ne ad verilir?",
+    "options": ["Hat-trick", "Brace", "Treble", "Triple"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q092",
+    "category": "Genel Kültür",
+    "difficulty": "easy",
+    "question": "Bir sezonda lig, kupa ve Şampiyonlar Ligi'ni birlikte kazanmaya ne denir?",
+    "options": ["Treble (Üçleme)", "Double", "Grand Slam", "Sweep"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q093",
+    "category": "Genel Kültür",
+    "difficulty": "medium",
+    "question": "Futbolda 'derbi' terimi genellikle neyi ifade eder?",
+    "options": ["Aynı şehir veya bölgeden rakip takımlar arası maç", "Final maçı", "İlk maç", "Hazırlık maçı"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q094",
+    "category": "Genel Kültür",
+    "difficulty": "medium",
+    "question": "Bir takımın hem iç saha hem deplasmanda rakibine karşı galip gelmesine ne denir?",
+    "options": ["Double (Çifte galibiyet)", "Treble", "Sweep", "Clean sheet"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q095",
+    "category": "Genel Kültür",
+    "difficulty": "easy",
+    "question": "Bir kalecinin maç boyunca gol yememesine ne ad verilir?",
+    "options": ["Clean sheet", "Hat-trick", "Assist", "Offside"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q096",
+    "category": "Genel Kültür",
+    "difficulty": "medium",
+    "question": "Futbolda 'tiki-taka' oyun stili en çok hangi kulüple özdeşleşmiştir?",
+    "options": ["Barcelona", "Real Madrid", "Bayern Münih", "Manchester City"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q097",
+    "category": "Genel Kültür",
+    "difficulty": "medium",
+    "question": "Sözleşmesi biten oyuncunun bedel ödenmeden başka kulübe geçmesine ne denir?",
+    "options": ["Bonservissiz transfer (Serbest transfer)", "Kiralık transfer", "Takas", "Opsiyonlu transfer"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q098",
+    "category": "Genel Kültür",
+    "difficulty": "easy",
+    "question": "Futbolda oyuncuların topu doğrudan kaleye göndermesine ne denir?",
+    "options": ["Şut", "Asist", "Driblig", "Korner"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q099",
+    "category": "Genel Kültür",
+    "difficulty": "medium",
+    "question": "Bir takımın savunmada kalan oyuncu sayısını artırarak skoru korumaya çalıştığı taktiğe ne denir?",
+    "options": ["Park the bus (Otobüsü park etmek)", "Tiki-taka", "Gegenpressing", "Total football"],
+    "correctIndex": 0
+  },
+  {
+    "id": "q100",
+    "category": "Genel Kültür",
+    "difficulty": "easy",
+    "question": "Kornerden gelen bir topu doğrudan kafayla file ile buluşturmaya ne denir?",
+    "options": ["Kafa golü", "Sürtünme golü", "Voleybol vuruşu", "Bisiklet vuruşu"],
+    "correctIndex": 0
+  }
+]

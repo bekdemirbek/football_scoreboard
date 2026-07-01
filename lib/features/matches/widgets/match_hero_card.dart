@@ -42,9 +42,6 @@ class MatchHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primary = Theme.of(context).colorScheme.primary;
     final hasScore = match.homeScore != null && match.awayScore != null;
     final live = _isLive;
 
@@ -52,13 +49,13 @@ class MatchHeroCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: isDark ? const Color(0xFF060B14) : ac.cardSurface,
+        color: const Color(0xFF07110B),
         border: Border.all(
-          color: primary.withValues(alpha: isDark ? 0.25 : 0.2),
+          color: AppColors.accentGreen.withValues(alpha: 0.25),
         ),
         boxShadow: [
           BoxShadow(
-            color: primary.withValues(alpha: isDark ? 0.18 : 0.1),
+            color: AppColors.accentGreen.withValues(alpha: 0.18),
             blurRadius: 30,
             spreadRadius: -5,
           ),
@@ -74,26 +71,22 @@ class MatchHeroCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    ac.headerGradientStart.withValues(
-                      alpha: isDark ? 0.22 : 0.14,
-                    ),
-                    ac.headerGradientEnd.withValues(
-                      alpha: isDark ? 0.18 : 0.10,
-                    ),
+                    AppColors.headerGradientStart.withValues(alpha: 0.22),
+                    AppColors.headerGradientEnd.withValues(alpha: 0.18),
                   ],
                 ),
               ),
             ),
           ),
-          Positioned(
+          const Positioned(
             top: -40,
             left: -30,
-            child: _Floodlight(color: ac.headerGradientStart, size: 160),
+            child: _Floodlight(color: AppColors.headerGradientStart, size: 160),
           ),
-          Positioned(
+          const Positioned(
             top: -40,
             right: -30,
-            child: _Floodlight(color: ac.headerGradientEnd, size: 160),
+            child: _Floodlight(color: AppColors.headerGradientEnd, size: 160),
           ),
           // ── Content ────────────────────────────────────────────────────
           Padding(
@@ -101,7 +94,7 @@ class MatchHeroCard extends StatelessWidget {
             child: Column(
               children: [
                 if (live) ...[
-                  _LiveBadge(status: match.status, ac: ac),
+                  _LiveBadge(status: match.status),
                   const SizedBox(height: 16),
                 ],
                 Row(
@@ -113,7 +106,6 @@ class MatchHeroCard extends StatelessWidget {
                         isFav: homeFav,
                         onFavTap: onToggleHome,
                         scorers: _scorersFor(true),
-                        ac: ac,
                       ),
                     ),
                     Padding(
@@ -126,8 +118,8 @@ class MatchHeroCard extends StatelessWidget {
                                 : 'VS',
                             style: TextStyle(
                               color: hasScore
-                                  ? ac.textPrimary
-                                  : ac.textTertiary,
+                                  ? AppColors.textPrimary
+                                  : AppColors.textTertiary,
                               fontSize: hasScore ? 28 : 22,
                               fontWeight: FontWeight.w900,
                               letterSpacing: -1,
@@ -137,8 +129,8 @@ class MatchHeroCard extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               match.time ?? '--:--',
-                              style: TextStyle(
-                                color: primary,
+                              style: const TextStyle(
+                                color: AppColors.accentGreen,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
                               ),
@@ -153,7 +145,6 @@ class MatchHeroCard extends StatelessWidget {
                         isFav: awayFav,
                         onFavTap: onToggleAway,
                         scorers: _scorersFor(false),
-                        ac: ac,
                         alignEnd: true,
                       ),
                     ),
@@ -167,14 +158,14 @@ class MatchHeroCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: ac.cardSurface,
+                      color: AppColors.cardSurface,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: ac.cardBorder),
+                      border: Border.all(color: AppColors.cardBorder),
                     ),
                     child: Text(
                       _statusLabel(match.status),
-                      style: TextStyle(
-                        color: ac.textSecondary,
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                       ),
@@ -227,7 +218,6 @@ class _TeamHero extends StatelessWidget {
     required this.isFav,
     required this.onFavTap,
     required this.scorers,
-    required this.ac,
     this.alignEnd = false,
   });
 
@@ -235,7 +225,6 @@ class _TeamHero extends StatelessWidget {
   final bool isFav;
   final VoidCallback onFavTap;
   final List<MatchEvent> scorers;
-  final AppColors ac;
   final bool alignEnd;
 
   @override
@@ -254,8 +243,8 @@ class _TeamHero extends StatelessWidget {
             maxLines: 2,
             textAlign: alignEnd ? TextAlign.end : TextAlign.start,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: ac.textPrimary,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
               fontSize: 13,
               fontWeight: FontWeight.w800,
               height: 1.3,
@@ -264,7 +253,7 @@ class _TeamHero extends StatelessWidget {
           const SizedBox(height: 6),
           Icon(
             isFav ? Icons.star_rounded : Icons.star_border_rounded,
-            color: isFav ? ac.goldColor : ac.textTertiary,
+            color: isFav ? AppColors.goldColor : AppColors.textTertiary,
             size: 20,
           ),
           if (scorers.isNotEmpty) ...[
@@ -277,8 +266,8 @@ class _TeamHero extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: alignEnd ? TextAlign.end : TextAlign.start,
-                  style: TextStyle(
-                    color: ac.textSecondary,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
                     fontSize: 10.5,
                     fontWeight: FontWeight.w700,
                   ),
@@ -292,9 +281,8 @@ class _TeamHero extends StatelessWidget {
 }
 
 class _LiveBadge extends StatefulWidget {
-  const _LiveBadge({required this.status, required this.ac});
+  const _LiveBadge({required this.status});
   final String? status;
-  final AppColors ac;
 
   @override
   State<_LiveBadge> createState() => _LiveBadgeState();
@@ -334,18 +322,18 @@ class _LiveBadgeState extends State<_LiveBadge>
       builder: (_, __) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: widget.ac.liveColor.withValues(
+          color: AppColors.liveColor.withValues(
             alpha: 0.1 + 0.08 * _anim.value,
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: widget.ac.liveColor.withValues(
+            color: AppColors.liveColor.withValues(
               alpha: 0.4 + 0.2 * _anim.value,
             ),
           ),
           boxShadow: [
             BoxShadow(
-              color: widget.ac.liveColor.withValues(alpha: 0.3 * _anim.value),
+              color: AppColors.liveColor.withValues(alpha: 0.3 * _anim.value),
               blurRadius: 16,
               spreadRadius: -2,
             ),
@@ -359,10 +347,10 @@ class _LiveBadgeState extends State<_LiveBadge>
               height: 7,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: widget.ac.liveColor,
+                color: AppColors.liveColor,
                 boxShadow: [
                   BoxShadow(
-                    color: widget.ac.liveColor.withValues(
+                    color: AppColors.liveColor.withValues(
                       alpha: 0.7 * _anim.value,
                     ),
                     blurRadius: 8,
@@ -374,8 +362,8 @@ class _LiveBadgeState extends State<_LiveBadge>
             const SizedBox(width: 7),
             Text(
               'CANLI$_minute',
-              style: TextStyle(
-                color: widget.ac.liveColor,
+              style: const TextStyle(
+                color: AppColors.liveColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1,

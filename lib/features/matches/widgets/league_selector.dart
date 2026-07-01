@@ -8,65 +8,75 @@ class LeagueSelector extends StatelessWidget {
     super.key,
     required this.selectedLeague,
     required this.onLeagueSelected,
+    this.leagues = footballLeagues,
   });
 
   final FootballLeague selectedLeague;
   final ValueChanged<FootballLeague> onLeagueSelected;
+  final List<FootballLeague> leagues;
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
-
     return SizedBox(
       height: 36,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: footballLeagues.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final league = footballLeagues[index];
-          final selected = league.id == selectedLeague.id;
+      // Sağ kenarda hafif fade: listenin yatay olarak kaydırılabildiğini
+      // (devamı olduğunu) gösteren görsel ipucu.
+      child: ShaderMask(
+        shaderCallback: (rect) => const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Colors.white, Colors.white, Colors.transparent],
+          stops: [0.0, 0.92, 1.0],
+        ).createShader(rect),
+        blendMode: BlendMode.dstIn,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(right: 28),
+          itemCount: leagues.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (context, index) {
+            final league = leagues[index];
+            final selected = league.id == selectedLeague.id;
 
-          return GestureDetector(
-            onTap: () => onLeagueSelected(league),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: selected
-                    ? LinearGradient(
-                        colors: [ac.headerGradientStart, ac.headerGradientEnd],
-                      )
-                    : null,
-                color: selected ? null : ac.unselectedPill,
-                border: Border.all(
-                  color: selected ? Colors.transparent : ac.cardBorder,
+            return GestureDetector(
+              onTap: () => onLeagueSelected(league),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 0,
                 ),
-                boxShadow: selected
-                    ? [
-                        BoxShadow(
-                          color: primary.withValues(alpha: 0.35),
-                          blurRadius: 10,
-                          spreadRadius: -2,
-                        ),
-                      ]
-                    : null,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                league.name,
-                style: TextStyle(
-                  color: selected ? Colors.white : ac.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: selected ? AppGradients.greenGlow : null,
+                  color: selected ? null : AppColors.cardBg,
+                  border: Border.all(
+                    color: selected ? Colors.transparent : AppColors.cardBorder,
+                  ),
+                  boxShadow: selected
+                      ? [
+                          BoxShadow(
+                            color: AppColors.accentGreen.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            spreadRadius: -3,
+                          ),
+                        ]
+                      : null,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  league.name,
+                  style: TextStyle(
+                    color: selected ? Colors.white : AppColors.textSecondary,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

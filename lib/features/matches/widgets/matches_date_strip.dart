@@ -84,10 +84,6 @@ class _DatePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -96,24 +92,16 @@ class _DatePill extends StatelessWidget {
         height: 52,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          gradient: selected
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [ac.headerGradientStart, ac.headerGradientEnd],
-                )
-              : null,
-          color: selected ? null : ac.unselectedPill,
+          gradient: selected ? AppGradients.greenGlow : null,
+          color: selected ? null : AppColors.cardBg,
           border: Border.all(
-            color: selected
-                ? ac.headerGradientStart.withValues(alpha: 0.0)
-                : ac.cardBorder,
+            color: selected ? Colors.transparent : AppColors.cardBorder,
             width: 1,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: primary.withValues(alpha: isDark ? 0.4 : 0.25),
+                    color: AppColors.accentGreen.withValues(alpha: 0.35),
                     blurRadius: 14,
                     spreadRadius: -3,
                     offset: const Offset(0, 4),
@@ -127,7 +115,7 @@ class _DatePill extends StatelessWidget {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 180),
               style: TextStyle(
-                color: selected ? Colors.white : ac.textSecondary,
+                color: selected ? Colors.white : AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
               ),
@@ -139,7 +127,7 @@ class _DatePill extends StatelessWidget {
               style: TextStyle(
                 color: selected
                     ? Colors.white.withValues(alpha: 0.75)
-                    : ac.textTertiary,
+                    : AppColors.textTertiary,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
               ),
@@ -159,9 +147,6 @@ class _CalendarPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -169,10 +154,14 @@ class _CalendarPill extends StatelessWidget {
         height: 52,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: ac.unselectedPill,
-          border: Border.all(color: ac.cardBorder),
+          color: AppColors.unselectedPill,
+          border: Border.all(color: AppColors.cardBorder),
         ),
-        child: Icon(Icons.calendar_month_rounded, color: primary, size: 20),
+        child: const Icon(
+          Icons.calendar_month_rounded,
+          color: AppColors.accentGreen,
+          size: 20,
+        ),
       ),
     );
   }

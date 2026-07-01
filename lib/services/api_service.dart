@@ -7,6 +7,7 @@ import '../models/match.dart';
 import '../models/scorer.dart';
 import '../models/standing.dart';
 import '../models/team.dart';
+import '../models/team_squad.dart';
 
 class ApiService {
   ApiService({
@@ -83,6 +84,42 @@ class ApiService {
     return matches;
   }
 
+  /// Elimizdeki tüm liglerin belirli bir güne ait maçlarını çeker ve
+  /// tek listede birleştirir. Bir lig başarısız olursa (limit/izin) atlanır,
+  /// diğerleri yine de döner. Free plan dakika limitini aşmamak için istekler
+  /// küçük gruplar hâlinde sırayla yapılır.
+  Future<List<Match>> fetchMatchesAllLeagues({
+    required DateTime date,
+    required List<FootballLeague> leagues,
+  }) async {
+    final valid = leagues.where((l) => (l.id ?? '').trim().isNotEmpty).toList();
+    final all = <Match>[];
+
+    const batchSize = 3;
+    for (var i = 0; i < valid.length; i += batchSize) {
+      final batch = valid.skip(i).take(batchSize);
+      final results = await Future.wait(
+        batch.map((league) async {
+          try {
+            return await fetchMatches(date: date, league: league);
+          } catch (_) {
+            return const <Match>[];
+          }
+        }),
+      );
+      for (final list in results) {
+        all.addAll(list);
+      }
+    }
+
+    all.sort((a, b) {
+      final aDate = a.date ?? DateTime(0);
+      final bDate = b.date ?? DateTime(0);
+      return aDate.compareTo(bDate);
+    });
+    return all;
+  }
+
   Future<List<Team>> fetchTeams({
     String endpoint = '/competitions/PL/teams',
     String query = 'Arsenal',
@@ -92,6 +129,19 @@ class ApiService {
       response.data,
       preferredKeys: const ['teams'],
     ).map(Team.fromJson).toList(growable: false);
+  }
+
+  Future<TeamSquad> fetchSquad(String teamId) async {
+    final response = await _get('/teams/$teamId').timeout(
+      const Duration(seconds: 12),
+      onTimeout: () =>
+          throw TimeoutException('API istegi zaman asimina ugradi.'),
+    );
+    final data = response.data;
+    if (data == null) {
+      throw StateError('Kadro verisi alınamadı.');
+    }
+    return TeamSquad.fromJson(data);
   }
 
   Future<List<Standing>> fetchStandings({String? leagueId}) async {
@@ -127,19 +177,17 @@ class ApiService {
 
   Future<List<Scorer>> fetchScorers({String? leagueId, int limit = 20}) async {
     final code = _competitionCode(leagueId);
-    final response = await _get(
-      '/competitions/$code/scorers',
-      queryParameters: {'limit': limit},
-    ).timeout(
-      const Duration(seconds: 12),
-      onTimeout: () =>
-          throw TimeoutException('API istegi zaman asimina ugradi.'),
-    );
+    final response =
+        await _get(
+          '/competitions/$code/scorers',
+          queryParameters: {'limit': limit},
+        ).timeout(
+          const Duration(seconds: 12),
+          onTimeout: () =>
+              throw TimeoutException('API istegi zaman asimina ugradi.'),
+        );
 
-    final raw = _readList(
-      response.data,
-      preferredKeys: const ['scorers'],
-    );
+    final raw = _readList(response.data, preferredKeys: const ['scorers']);
 
     return raw
         .asMap()
@@ -157,18 +205,20 @@ class ApiService {
     final from = _formatDate(now.subtract(Duration(days: pastDays)));
     final to = _formatDate(now.add(Duration(days: futureDays)));
 
-    final response = await _get(
-      '/teams/$teamId/matches',
-      queryParameters: {'dateFrom': from, 'dateTo': to},
-    ).timeout(
-      const Duration(seconds: 12),
-      onTimeout: () =>
-          throw TimeoutException('API istegi zaman asimina ugradi.'),
-    );
+    final response =
+        await _get(
+          '/teams/$teamId/matches',
+          queryParameters: {'dateFrom': from, 'dateTo': to},
+        ).timeout(
+          const Duration(seconds: 12),
+          onTimeout: () =>
+              throw TimeoutException('API istegi zaman asimina ugradi.'),
+        );
 
-    final matches = _readList(response.data, preferredKeys: const ['matches'])
-        .map(Match.fromJson)
-        .toList(growable: false);
+    final matches = _readList(
+      response.data,
+      preferredKeys: const ['matches'],
+    ).map(Match.fromJson).toList(growable: false);
 
     matches.sort((a, b) {
       final aDate = a.date ?? DateTime(0);

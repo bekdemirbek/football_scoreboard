@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../models/match_statistic.dart';
+import 'team_badge.dart';
 
 class MatchStatsTab extends StatelessWidget {
-  const MatchStatsTab({super.key, required this.rows});
+  const MatchStatsTab({
+    super.key,
+    required this.rows,
+    this.homeTeam,
+    this.awayTeam,
+  });
 
   final List<MatchStatRow> rows;
+  final String? homeTeam;
+  final String? awayTeam;
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-
     if (rows.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
         child: Center(
           child: Text(
             'Bu maç için istatistik verisi yok.',
             style: TextStyle(
-              color: ac.textTertiary,
+              color: AppColors.textTertiary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -30,86 +36,100 @@ class MatchStatsTab extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ac.cardBorder),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.cardBgRaised, AppColors.cardBg],
+        ),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 14),
       child: Column(
-        children: [for (final row in rows) _StatBarRow(row: row, ac: ac)],
+        children: [
+          if (homeTeam != null && awayTeam != null) ...[
+            _StatsTeamHeader(homeTeam: homeTeam!, awayTeam: awayTeam!),
+            const SizedBox(height: 16),
+          ],
+          for (final row in rows)
+            StatBar(
+              label: row.label,
+              // Bar oranı homeRatio ile birebir; metinler ham değerlerden gelir.
+              leftValue: (row.homeRatio * 1000).round(),
+              rightValue: 1000 - (row.homeRatio * 1000).round(),
+              leftDisplay: row.homeDisplay,
+              rightDisplay: row.awayDisplay,
+            ),
+        ],
       ),
     );
   }
 }
 
-class _StatBarRow extends StatelessWidget {
-  const _StatBarRow({required this.row, required this.ac});
+class _StatsTeamHeader extends StatelessWidget {
+  const _StatsTeamHeader({required this.homeTeam, required this.awayTeam});
 
-  final MatchStatRow row;
-  final AppColors ac;
+  final String homeTeam;
+  final String awayTeam;
 
   @override
   Widget build(BuildContext context) {
-    const homeColor = Color(0xFF2563EB);
-    const awayColor = Color(0xFFE0A639);
-    final homeFlex = (row.homeRatio * 100).round().clamp(1, 99);
-    final awayFlex = 100 - homeFlex;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
             children: [
+              TeamBadge(teamName: homeTeam, size: 40),
+              const SizedBox(height: 7),
               Text(
-                row.homeDisplay,
-                style: TextStyle(
-                  color: ac.textPrimary,
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  row.label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: ac.textSecondary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Text(
-                row.awayDisplay,
-                style: TextStyle(
-                  color: ac.textPrimary,
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w800,
+                homeTeam,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: homeFlex,
-                  child: Container(height: 5, color: homeColor),
-                ),
-                const SizedBox(width: 2),
-                Expanded(
-                  flex: awayFlex,
-                  child: Container(height: 5, color: awayColor),
-                ),
-              ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'MAÇ\nİSTATİSTİKLERİ',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+              height: 1.25,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
             ),
           ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              TeamBadge(teamName: awayTeam, size: 40),
+              const SizedBox(height: 7),
+              Text(
+                awayTeam,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

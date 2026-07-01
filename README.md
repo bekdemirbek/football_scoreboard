@@ -1,105 +1,161 @@
 # ⚽ Maçkart — Football Scoreboard
 
-A Flutter app for live football scores, league standings, and detailed match
-info — lineups on a real pitch diagram, goal scorers, and head-to-head
-statistics — built with Riverpod and two free public football APIs.
+A Flutter app for **live football scores, standings, top scorers/assists, match
+detail (lineups on a real pitch, stats, events), team squads**, plus two
+**prediction mini-games** and a **100-question football quiz** — built with
+Riverpod on top of two real public football APIs.
 
 [![CI](https://github.com/bekdemirbek/football_scoreboard/actions/workflows/ci.yml/badge.svg)](https://github.com/bekdemirbek/football_scoreboard/actions/workflows/ci.yml)
 [![Deploy Web Demo](https://github.com/bekdemirbek/football_scoreboard/actions/workflows/deploy.yml/badge.svg)](https://github.com/bekdemirbek/football_scoreboard/actions/workflows/deploy.yml)
 
 **🔗 Live demo:** https://bekdemirbek.github.io/football_scoreboard/
 
-> The public demo runs without the API-Football key (see [Known limitations](#known-limitations)
-> below), so the Matches and Standings tabs show live data while the match-detail
-> lineup/stats tabs show a friendly "no data" notice. Run it locally with your own
-> key to see the full feature set.
+> Dark-only, fully Turkish UI. Design language: near-black + emerald green + gold,
+> team **abbreviations instead of logos**, gradient-bordered cards, skeleton
+> loaders, and an explicit loading / error / empty state on every async screen.
 
-## Screenshots
+## Screenshots / Demo
 
-| Matches | Standings | Gol Krallığı | Match detail |
+<!-- Add a short screen recording here — it's the fastest way for a reviewer to
+     grasp the app. Record on device/emulator, drop the file in docs/ and link it: -->
+
+![Demo](docs/demo.gif)
+
+| Canlı Skorlar | Puan Durumu | Gol/Asist Krallığı | Futbol Quiz |
 |---|---|---|---|
-| ![Matches](docs/screenshots/matches.png) | ![Standings](docs/screenshots/standings.png) | ![Scorers](docs/screenshots/scorers.png) | ![Match detail](docs/screenshots/match_detail.png) |
+| ![Matches](docs/screenshots/matches.png) | ![Standings](docs/screenshots/standings.png) | ![Scorers](docs/screenshots/scorers.png) | ![Quiz](docs/screenshots/quiz.png) |
 
-*(Add your own screenshots to `docs/screenshots/` — see the filenames above.)*
+*(Drop your own captures into `docs/screenshots/`.)*
 
 ## Features
 
-- **Maçlar (Matches)** — browse fixtures by date and league, live-match pulse
-  indicator, favorite-team markers.
-- **Puan Tablosu (Standings)** — league table with promotion/relegation zone
-  colors; tournaments with multiple groups (e.g. the World Cup) render each
-  group as its own table, plus a knockout-bracket section (Last 32 → Final)
-  once the group stage is over.
-- **Gol Krallığı (Top Scorers)** — animated leaderboard per league: gold /
-  silver / bronze podium cards with pulsing glow badges, animated goal
-  progress bars, and staggered slide-in entrance for every row.
-- **Match detail** — a tabbed view per match:
-  - **Maç** — full event timeline (goals with scorer + assist, cards,
-    substitutions)
-  - **Kadro** — both starting XIs drawn on an actual pitch diagram, positioned
-    from the API's formation grid, plus substitutes and the coach
-  - **İstatistik** — possession, shots, cards, etc. as home-vs-away bars
-- **Favoriler** — persisted favorite teams with per-team match history sheet
-  (recent 5 + upcoming 3 matches, tap-to-open profile).
-- **Dark / light theme** with a custom `ThemeExtension` for the app's
-  football-specific palette (live red, gold, zone colors).
+**Bottom navigation — 5 tabs**
+
+- **Canlı Skorlar (Matches)** — fixtures by day (Dün/Bugün/Yarın) + league filter
+  incl. a **"Tüm Ligler"** option that merges every configured league into one
+  list, grouped per league; live-match cards with a gradient border + pulse;
+  in-header team search.
+- **Puan Durumu (Standings)** — league table with European/relegation zone
+  colors; group-stage tournaments render one table per group plus a knockout
+  bracket; **tap a team → squad screen**; in-header search.
+- **Gol / Asist Krallığı (Top Scorers)** — a Goals⇄Assists toggle re-ranks the
+  same dataset; clean gradient-ranked rows; search.
+- **Oyunlar (Games)** — three sub-games:
+  - **Sıralama Tahmini** — drag teams (shuffled alphabetically so the answer
+    isn't given away) into your predicted final order, then score it against the
+    live table (exact = 3, ±1 = 2, ±2 = 1).
+  - **Gol Kralı Tahmini** — pick the future top scorer; goal counts & ranks are
+    hidden so it's a real guess; instant "currently #N" feedback.
+  - **Futbol Quiz** — 10 random questions from a 100-question / 8-category local
+    pool, timed, with a persistent leaderboard.
+- **Favoriler (Favorites)** — persisted favorite teams + per-team match history.
+
+**Match detail** (pushed) — tabbed: event timeline · both starting XIs on a real
+pitch diagram · possession/shots/etc. as home-vs-away bars.
 
 ## Architecture
 
-Riverpod-based, feature-first layout:
+Layered, feature-first. The data flows in one direction:
 
 ```
-lib/
-├── core/            # Theming (ThemeData + custom AppColors extension)
-├── models/          # Plain data classes, defensive multi-shape JSON parsing
-├── services/         # HTTP clients (football-data.org, API-Football)
-├── providers/        # Riverpod Notifiers — the "ViewModel" layer
-└── features/
-    ├── home/        # Bottom-nav shell (4 tabs)
-    ├── matches/      # Match list + match detail (events/lineups/stats tabs)
-    ├── standings/    # League table + knockout bracket
-    ├── scorers/      # Top scorers leaderboard with animations
-    └── favorites/    # Favorite teams + per-team match history sheet
+┌──────────────┐   ref.watch/read    ┌──────────────┐   calls    ┌──────────────┐   parses   ┌──────────────┐
+│   Widget     │ ─────────────────▶  │   Provider   │ ─────────▶ │   Service    │ ─────────▶ │    Model     │
+│ (features/)  │ ◀─────────────────  │ (Riverpod    │ ◀───────── │ (Dio / asset)│ ◀───────── │ (fromJson)   │
+└──────────────┘   AsyncValue<T>     │  Notifier)   │   Future<T>└──────────────┘            └──────────────┘
+      UI                             └──────────────┘
+   no HTTP,                          the "ViewModel":              HTTP clients +             plain data,
+   no parsing                        state + orchestration         asset loading              defensive parsing
 ```
 
-- **State management:** `flutter_riverpod` — `AsyncNotifierProvider` for
-  remote collections (`matchesProvider`, `standingsProvider`,
-  `knockoutMatchesProvider`), `FutureProvider.family` for per-match detail
-  (`matchDetailProvider`), plain `NotifierProvider` for UI selection state.
-- **Two independent data sources**, each behind its own service class:
-  [football-data.org](https://www.football-data.org/) for fixtures/standings,
-  [API-Football](https://www.api-football.com/) for lineups/events/statistics
-  (cross-referenced by date + fuzzy team-name matching, since the two APIs use
-  unrelated IDs).
-- **Graceful degradation everywhere:** every async section has an explicit
-  loading / empty / error state — a missing or rate-limited API response never
-  crashes a screen, it falls back to an inline notice.
+- **Widget** never touches HTTP or JSON — it only watches a provider and renders
+  `AsyncValue.when(loading / error / data)`.
+- **Provider (Riverpod Notifier)** is the ViewModel: holds UI/selection state,
+  orchestrates calls, exposes `AsyncValue`. All providers live in
+  [`lib/providers/api_providers.dart`](lib/providers/api_providers.dart).
+- **Service** is the only layer that does I/O — two HTTP clients + one asset
+  loader. Concrete classes, injected into providers (so they're swapped for
+  fakes in tests).
+- **Model** is a plain immutable class with a defensive `fromJson` (the two APIs
+  return different shapes, so parsing tolerates multiple key names).
+
+### Why a Service layer but no Repository?
+
+A Repository indirection earns its keep when you have **multiple/​switchable data
+sources behind one domain interface**, offline caching to merge, or you need to
+mock at the domain boundary. Here:
+
+- Each screen maps to **one** endpoint on one API; there's no "same data from DB
+  or network" decision to hide.
+- Services are already **injectable and faked in tests** (see below), so a
+  `Repository` wouldn't add testability — only a passthrough layer.
+- Riverpod's Notifier *is* the orchestration/ViewModel layer, which is where
+  a Repository's coordination logic would otherwise sit.
+
+So `Service` is the boundary. If a second source with caching/merging were added
+(e.g. a Hive offline cache fronting the network), **that** is when I'd introduce
+a Repository to hide the source decision — and the current Notifier→Service call
+sites are the exact seam where it would slot in.
+
+### State management (Riverpod)
+
+- `AsyncNotifierProvider` for remote collections: `matchesProvider`,
+  `standingsProvider`, `scorersProvider`, `knockoutMatchesProvider`, plus the
+  persisted `favoriteTeamsProvider`, `predictionsProvider`, `quizLeaderboardProvider`.
+- `FutureProvider.family` for per-key fetches: `matchDetailProvider(match)`,
+  `teamSquadProvider(teamId)`.
+- Plain `NotifierProvider` for selection/UI state (selected date, per-tab league,
+  goals/assists mode, search queries, active quiz).
+- No code-gen, no `StateNotifier` — the whole codebase uses the modern
+  `Notifier` / `AsyncNotifier` API consistently.
+
+## Data sources & rate-limit handling
+
+Two independent APIs, each behind its own service:
+
+| Source | Used for | Client |
+|---|---|---|
+| [football-data.org](https://www.football-data.org/) | fixtures, standings, scorers, **team squad** | `ApiService` |
+| [API-Football](https://www.api-football.com/) | match detail: lineups / events / statistics | `ApiFootballService` |
+
+The two APIs use unrelated IDs, so match detail is **cross-referenced by date +
+fuzzy team-name matching** (normalized, FC/CF/AC suffixes stripped).
+
+**Rate-limit / failure handling** ([`lib/services/api_service.dart`](lib/services/api_service.dart)):
+
+- `429` → a clear "minute limit reached, try again" `StateError` (surfaced as an
+  in-screen retry notice, never a crash).
+- `403` → "restricted on the free plan / invalid token" message.
+- Per-request **12s timeout** wrapping the Dio call.
+- **"Tüm Ligler"** fans out across ~10 leagues in **batches of 3**, and each
+  league's fetch is wrapped in try/catch so a single rate-limited league is
+  skipped while the rest still render (`fetchMatchesAllLeagues`).
+- Every provider is `AsyncValue`, so loading/empty/error are explicit UI states.
+
+## Security — API keys
+
+- Keys come from `--dart-define` (`String.fromEnvironment`) — **nothing is
+  hardcoded** in source.
+- **`.env` is git-ignored** (`.gitignore` allows only `.env.example`); no secret
+  is ever committed. Verified: `git ls-files` shows only `.env.example`.
+- ⚠️ **Caveat (honest):** `String.fromEnvironment` is a *compile-time* constant,
+  so if you build a mobile **APK/IPA with `--dart-define=KEY=...`, the key is
+  baked into the binary** and is recoverable by decompiling. For a real release
+  the correct pattern is to **not ship the key in the client at all** and route
+  through a backend/proxy — which this project already does for web via the small
+  Node proxy in [`tools/api_proxy/`](tools/api_proxy/) (keeps the token
+  server-side and fixes CORS). For production mobile you'd point the app at that
+  same proxy/backend.
 
 ## Tech stack
 
 | | |
 |---|---|
-| Framework | Flutter (Dart ^3.9) |
-| State management | `flutter_riverpod` 3.x |
+| Framework | Flutter (Dart ^3.9), dark-only |
+| State management | `flutter_riverpod` 3.x (`Notifier` / `AsyncNotifier`, no codegen) |
 | HTTP | `dio` |
-| Persistence | `shared_preferences` |
-| Testing | `flutter_test` — unit, widget, and golden tests |
-| CI/CD | GitHub Actions — analyze/format/test on every push, automatic web deploy to GitHub Pages |
-
-## Known limitations
-
-- **API-Football free plan** only allows fixture lookups within a 3-day
-  rolling window (yesterday/today/tomorrow) and a 100 requests/day cap. Match
-  detail (lineups/events/stats) is therefore only available for matches inside
-  that window — older or future fixtures show a "no data" notice by design,
-  not as a bug.
-- The public web demo intentionally **does not embed the API-Football key**
-  (see `.github/workflows/deploy.yml`) to avoid a single visitor exhausting the
-  shared daily quota. The Matches/Standings tabs still use a real
-  football-data.org key and work normally.
-- Local development against both APIs from Flutter Web requires the small
-  Node proxy in `tools/api_proxy/` (CORS workaround); native/mobile builds can
-  call the APIs directly.
+| Persistence | `shared_preferences` (favorites, predictions, quiz leaderboard) |
+| Testing | `flutter_test` — service unit tests (faked `Dio`), provider tests, widget + golden |
+| CI/CD | GitHub Actions — analyze/format/test on push, web deploy to Pages |
 
 ## Getting started
 
@@ -107,15 +163,22 @@ lib/
 flutter pub get
 
 cp .env.example .env
-# fill in FOOTBALL_DATA_API_KEY (free: https://www.football-data.org/client/register)
-# and API_FOOTBALL_KEY (free: https://dashboard.api-football.com/register)
+# fill FOOTBALL_DATA_API_KEY (free: https://www.football-data.org/client/register)
+# and    API_FOOTBALL_KEY   (free: https://dashboard.api-football.com/register)
+```
 
-# Mobile / desktop — reads .env via --dart-define-from-file
+**Web** (keys stay server-side in the proxy — recommended):
+
+```bash
+node tools/api_proxy/server.mjs          # terminal 1 — reads .env, serves :8787
+flutter run -d chrome --dart-define=API_PROXY_URL=http://localhost:8787   # terminal 2
+```
+
+**Mobile / desktop** (dev only — note the binary-embedding caveat above):
+
+```bash
 flutter run --dart-define-from-file=.env
-
-# Web — needs the local proxy for CORS
-node tools/api_proxy/server.mjs &
-flutter run -d chrome --dart-define=API_PROXY_URL=http://localhost:8787
+# or route it through the same proxy: --dart-define=API_PROXY_URL=http://<host>:8787
 ```
 
 ## Testing
@@ -123,16 +186,50 @@ flutter run -d chrome --dart-define=API_PROXY_URL=http://localhost:8787
 ```bash
 flutter analyze
 dart format --output=none --set-exit-if-changed .
-flutter test                 # unit + widget + golden tests
-flutter test --update-goldens  # regenerate golden images after an intentional UI change
+flutter test                    # unit + provider + widget + golden
+flutter test --update-goldens   # regenerate goldens after an intentional UI change
 ```
 
-Tests cover the Riverpod providers (with a fake `Dio` adapter, no real network
-calls), the match-detail page's loading/empty/data states, and golden
-(pixel-diff) regression tests for key widgets.
+Coverage highlights (priority: **Service > Provider > Widget**):
+
+- **Service** — `ApiService` error handling with a faked `Dio` adapter (no real
+  network): `429`/`403`/custom-message paths, standings parsing, and the
+  "Tüm Ligler" batch **tolerance** (one league fails → others still return).
+- **Provider** — `QuizLeaderboardNotifier` ordering rule (score desc, tie → time
+  asc) and `shared_preferences` persistence across containers.
+- **Logic/Widget** — quiz option-shuffle correctness, match-detail
+  loading/empty/data states, and golden regression for match cards.
+
+## Project structure
+
+```
+lib/
+├── core/app_theme.dart          # design system: colors, gradients, text, LiveMatchCard, StatBar
+├── models/                      # plain data + fromJson (match, standing, scorer, team_squad, quiz_*, …)
+├── services/                    # ApiService, ApiFootballService, QuizService (I/O boundary)
+├── providers/api_providers.dart # every Riverpod provider / Notifier (the ViewModel layer)
+├── features/                    # feature-first UI
+│   ├── home/ matches/ standings/ scorers/ favorites/ games/ quiz/ team/
+└── widgets/                     # shared: screen_header (ScreenHeader + SegmentedTabs), team_badge, shimmer, …
+assets/data/quiz_questions.json  # 100 questions, 8 categories
+tools/api_proxy/server.mjs       # Node proxy for web (CORS + server-side token)
+```
+
+## Scalability note
+
+The flat `features/<x>/` layout is comfortable at the current ~8 features. Beyond
+~20 it would grow along two axes: (1) split `widgets/` and `core/` into a real
+**shared/ design-system module** and lift cross-feature models into a `domain/`
+layer; (2) if features start depending on each other, introduce a light **DI/
+service-locator** seam (or per-feature provider files instead of one global
+`api_providers.dart`) so wiring stays explicit. The Notifier→Service boundary is
+already the natural place to slot a Repository + cache when a second data source
+appears.
 
 ## Roadmap
 
-- [x] Full **Favoriler** tab: recent/upcoming matches + team profile sheet
-- [x] **Gol Krallığı** (top scorers) animated leaderboard
-- [ ] Local caching for offline support (Hive TTL cache)
+- [x] Full **Favoriler** tab + per-team history
+- [x] **Gol/Asist Krallığı**, **Tüm Ligler**, **team squad**, prediction games, **Futbol Quiz**
+- [ ] Offline cache (Hive TTL) → would introduce a Repository layer
+- [ ] Route mobile through the proxy by default (drop client-side keys entirely)
+```

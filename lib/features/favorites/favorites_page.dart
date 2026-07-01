@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../models/favorite_team.dart';
 import '../../providers/api_providers.dart';
 import '../../widgets/fade_route.dart';
+import '../../widgets/screen_header.dart';
 import '../matches/match_detail_page.dart';
 import '../matches/widgets/match_card.dart';
 import '../matches/widgets/team_badge.dart';
@@ -15,7 +16,6 @@ class FavoritesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final favoritesAsync = ref.watch(favoriteTeamsProvider);
 
     return Scaffold(
@@ -23,11 +23,12 @@ class FavoritesPage extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: favoritesAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator.adaptive()),
-          error: (e, _) => _ErrorState(message: e.toString(), ac: ac),
+          loading: () =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+          error: (e, _) => _ErrorState(message: e.toString()),
           data: (teams) => teams.isEmpty
-              ? _EmptyState(ac: ac)
-              : _FavoritesContent(teams: teams, ac: ac),
+              ? const _EmptyState()
+              : _FavoritesContent(teams: teams),
         ),
       ),
     );
@@ -37,33 +38,37 @@ class FavoritesPage extends ConsumerWidget {
 // ─── Content ───────────────────────────────────────────────────────────────────
 
 class _FavoritesContent extends ConsumerWidget {
-  const _FavoritesContent({required this.teams, required this.ac});
+  const _FavoritesContent({required this.teams});
 
   final List<FavoriteTeam> teams;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primary = Theme.of(context).colorScheme.primary;
     final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
 
     return RefreshIndicator(
       onRefresh: () => ref.refresh(favoriteTeamsProvider.future),
-      color: primary,
-      backgroundColor: ac.cardSurface,
+      color: AppColors.accentGreen,
+      backgroundColor: AppColors.cardSurface,
       child: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 100),
         children: [
-          _FavoritesHeader(ac: ac),
-          const SizedBox(height: 20),
-          for (final team in teams) ...[
-            _TeamSection(
-              team: team,
-              ac: ac,
-              primary: primary,
-              favNotifier: favNotifier,
+          const ScreenHeader(title: 'Favoriler'),
+          const SizedBox(height: 8),
+          const Center(
+            child: Text(
+              'Takıma tıkla → profil ve maç geçmişi',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+          ),
+          const SizedBox(height: 16),
+          for (final team in teams) ...[
+            _TeamSection(team: team, favNotifier: favNotifier),
             const SizedBox(height: 16),
           ],
         ],
@@ -72,58 +77,12 @@ class _FavoritesContent extends ConsumerWidget {
   }
 }
 
-// ─── Header ────────────────────────────────────────────────────────────────────
-
-class _FavoritesHeader extends StatelessWidget {
-  const _FavoritesHeader({required this.ac});
-  final AppColors ac;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [ac.headerGradientStart, ac.headerGradientEnd],
-          ).createShader(bounds),
-          child: const Text(
-            'Favoriler',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.8,
-            ),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Takıma tıkla → profil ve maç geçmişi',
-          style: TextStyle(
-            color: ac.textSecondary,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 // ─── Per-team section ──────────────────────────────────────────────────────────
 
 class _TeamSection extends ConsumerWidget {
-  const _TeamSection({
-    required this.team,
-    required this.ac,
-    required this.primary,
-    required this.favNotifier,
-  });
+  const _TeamSection({required this.team, required this.favNotifier});
 
   final FavoriteTeam team;
-  final AppColors ac;
-  final Color primary;
   final FavoriteTeamsNotifier favNotifier;
 
   @override
@@ -131,15 +90,14 @@ class _TeamSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Team header row ────────────────────────────────────────────────
         GestureDetector(
           onTap: () => TeamProfileSheet.show(context, team),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: ac.cardSurface,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: ac.cardBorder),
+              color: AppColors.cardSurface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.cardBorder),
             ),
             child: Row(
               children: [
@@ -148,17 +106,17 @@ class _TeamSection extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     team.name,
-                    style: TextStyle(
-                      color: ac.textPrimary,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.3,
                     ),
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.chevron_right_rounded,
-                  color: ac.textTertiary,
+                  color: AppColors.textTertiary,
                   size: 20,
                 ),
                 const SizedBox(width: 4),
@@ -166,11 +124,11 @@ class _TeamSection extends ConsumerWidget {
                   onTap: () =>
                       ref.read(favoriteTeamsProvider.notifier).toggle(team),
                   behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
+                  child: const Padding(
+                    padding: EdgeInsets.all(4),
                     child: Icon(
                       Icons.star_rounded,
-                      color: ac.goldColor,
+                      color: AppColors.goldColor,
                       size: 20,
                     ),
                   ),
@@ -179,9 +137,8 @@ class _TeamSection extends ConsumerWidget {
             ),
           ),
         ),
-        // ── Match list (only if team has an ID for API lookup) ─────────────
         if (team.id.isNotEmpty)
-          _TeamMatchPreview(team: team, ac: ac, primary: primary, favNotifier: favNotifier),
+          _TeamMatchPreview(team: team, favNotifier: favNotifier),
       ],
     );
   }
@@ -190,16 +147,9 @@ class _TeamSection extends ConsumerWidget {
 // ─── Inline match preview (3 most-recent + next) ───────────────────────────────
 
 class _TeamMatchPreview extends ConsumerWidget {
-  const _TeamMatchPreview({
-    required this.team,
-    required this.ac,
-    required this.primary,
-    required this.favNotifier,
-  });
+  const _TeamMatchPreview({required this.team, required this.favNotifier});
 
   final FavoriteTeam team;
-  final AppColors ac;
-  final Color primary;
   final FavoriteTeamsNotifier favNotifier;
 
   @override
@@ -207,15 +157,15 @@ class _TeamMatchPreview extends ConsumerWidget {
     final matchesAsync = ref.watch(teamMatchesProvider(team.id));
 
     return matchesAsync.when(
-      loading: () => Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: _MatchSkeleton(ac: ac),
+      loading: () => const Padding(
+        padding: EdgeInsets.only(top: 8),
+        child: _MatchSkeleton(),
       ),
-      error: (e, _) => Padding(
-        padding: const EdgeInsets.only(top: 8, left: 4),
+      error: (e, _) => const Padding(
+        padding: EdgeInsets.only(top: 8, left: 4),
         child: Text(
           'Maçlar yüklenemedi',
-          style: TextStyle(color: ac.textTertiary, fontSize: 12),
+          style: TextStyle(color: AppColors.textTertiary, fontSize: 12),
         ),
       ),
       data: (matches) {
@@ -241,35 +191,35 @@ class _TeamMatchPreview extends ConsumerWidget {
             for (final m in preview) ...[
               MatchCard(
                 match: m,
-                hasFavorite: favNotifier.isFavoriteByName(m.homeTeam) ||
+                hasFavorite:
+                    favNotifier.isFavoriteByName(m.homeTeam) ||
                     favNotifier.isFavoriteByName(m.awayTeam),
-                onTap: () => Navigator.of(context).push(
-                  FadeRoute(child: MatchDetailPage(match: m)),
-                ),
+                onTap: () => Navigator.of(
+                  context,
+                ).push(FadeRoute(child: MatchDetailPage(match: m))),
               ),
               const SizedBox(height: 6),
             ],
-            // "Tüm maçları gör" link
             GestureDetector(
               onTap: () => TeamProfileSheet.show(context, team),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Tüm maçları gör',
                       style: TextStyle(
-                        color: primary,
+                        color: AppColors.accentGreen,
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Icon(
                       Icons.arrow_forward_rounded,
                       size: 13,
-                      color: primary,
+                      color: AppColors.accentGreen,
                     ),
                   ],
                 ),
@@ -285,25 +235,24 @@ class _TeamMatchPreview extends ConsumerWidget {
 // ─── Match skeleton ────────────────────────────────────────────────────────────
 
 class _MatchSkeleton extends StatelessWidget {
-  const _MatchSkeleton({required this.ac});
-  final AppColors ac;
+  const _MatchSkeleton();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 72,
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: ac.cardBorder),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
       ),
-      child: Center(
+      child: const Center(
         child: SizedBox(
           width: 20,
           height: 20,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: ac.textTertiary,
+            color: AppColors.textTertiary,
           ),
         ),
       ),
@@ -314,8 +263,7 @@ class _MatchSkeleton extends StatelessWidget {
 // ─── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.ac});
-  final AppColors ac;
+  const _EmptyState();
 
   @override
   Widget build(BuildContext context) {
@@ -332,33 +280,37 @@ class _EmptyState extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
-                    ac.goldColor.withValues(alpha: 0.3),
-                    ac.goldColor.withValues(alpha: 0.1),
+                    AppColors.goldColor.withValues(alpha: 0.3),
+                    AppColors.goldColor.withValues(alpha: 0.1),
                   ],
                 ),
                 border: Border.all(
-                  color: ac.goldColor.withValues(alpha: 0.5),
+                  color: AppColors.goldColor.withValues(alpha: 0.5),
                   width: 1.5,
                 ),
               ),
-              child: Icon(Icons.star_rounded, color: ac.goldColor, size: 38),
+              child: const Icon(
+                Icons.star_rounded,
+                color: AppColors.goldColor,
+                size: 38,
+              ),
             ),
             const SizedBox(height: 20),
-            Text(
+            const Text(
               'Henüz favori takım yok',
               style: TextStyle(
-                color: ac.textPrimary,
+                color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,
               ),
             ),
             const SizedBox(height: 10),
-            Text(
+            const Text(
               'Puan Tablosu\'nda bir takım satırına dokun — altın yıldız görününce favorilere eklendi.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ac.textSecondary,
+                color: AppColors.textSecondary,
                 fontSize: 13,
                 height: 1.6,
               ),
@@ -373,9 +325,8 @@ class _EmptyState extends StatelessWidget {
 // ─── Error state ───────────────────────────────────────────────────────────────
 
 class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message, required this.ac});
+  const _ErrorState({required this.message});
   final String message;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
@@ -385,12 +336,16 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.cloud_off_rounded, color: ac.textTertiary, size: 40),
+            const Icon(
+              Icons.cloud_off_rounded,
+              color: AppColors.textTertiary,
+              size: 40,
+            ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               'Favoriler yüklenemedi',
               style: TextStyle(
-                color: ac.textPrimary,
+                color: AppColors.textPrimary,
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
               ),
@@ -401,7 +356,11 @@ class _ErrorState extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: ac.textSecondary, fontSize: 12, height: 1.5),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                height: 1.5,
+              ),
             ),
           ],
         ),

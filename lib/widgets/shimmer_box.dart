@@ -43,7 +43,6 @@ class _ShimmerBoxState extends State<ShimmerBox>
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, _) {
@@ -56,11 +55,11 @@ class _ShimmerBoxState extends State<ShimmerBox>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               stops: const [0.0, 0.45, 0.55, 1.0],
-              colors: [
-                ac.shimmerBase,
-                ac.shimmerHighlight,
-                ac.shimmerHighlight,
-                ac.shimmerBase,
+              colors: const [
+                AppColors.shimmerBase,
+                AppColors.shimmerHighlight,
+                AppColors.shimmerHighlight,
+                AppColors.shimmerBase,
               ],
               transform: _SlidingGradient(slidePercent: _animation.value),
             ),

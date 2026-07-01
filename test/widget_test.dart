@@ -7,7 +7,7 @@ void main() {
   testWidgets('match header shows app title', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: Scaffold(body: SafeArea(child: MatchesHeader())),
       ),
     );

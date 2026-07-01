@@ -43,8 +43,8 @@ class FavoriteTeam {
   @override
   bool operator ==(Object other) =>
       other is FavoriteTeam && other.id == id && id.isNotEmpty
-          ? true
-          : other is FavoriteTeam && other.name == name;
+      ? true
+      : other is FavoriteTeam && other.name == name;
 
   @override
   int get hashCode => id.isNotEmpty ? id.hashCode : name.hashCode;

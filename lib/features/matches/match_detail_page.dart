@@ -15,7 +15,6 @@ class MatchDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
     final homeFav = favNotifier.isFavoriteByName(match.homeTeam);
     final awayFav = favNotifier.isFavoriteByName(match.awayTeam);
@@ -26,13 +25,13 @@ class MatchDetailPage extends ConsumerWidget {
       body: Stack(
         children: [
           // ── Gradient Background ──────────────────────────────────────
-          Positioned.fill(
-            child: Container(
+          const Positioned.fill(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [ac.gradientStart, ac.gradientEnd],
+                  colors: [AppColors.gradientStart, AppColors.gradientEnd],
                 ),
               ),
             ),
@@ -42,7 +41,7 @@ class MatchDetailPage extends ConsumerWidget {
             child: Column(
               children: [
                 // ── App Bar ───────────────────────────────────────────
-                _DetailAppBar(ac: ac, league: match.league),
+                _DetailAppBar(league: match.league),
                 // ── Scrollable Body ───────────────────────────────────
                 Expanded(
                   child: ListView(
@@ -57,20 +56,24 @@ class MatchDetailPage extends ConsumerWidget {
                         detail: detail,
                         onToggleHome: () => ref
                             .read(favoriteTeamsProvider.notifier)
-                            .toggle(FavoriteTeam(
-                              id: match.homeTeamId ?? '',
-                              name: match.homeTeam,
-                            )),
+                            .toggle(
+                              FavoriteTeam(
+                                id: match.homeTeamId ?? '',
+                                name: match.homeTeam,
+                              ),
+                            ),
                         onToggleAway: () => ref
                             .read(favoriteTeamsProvider.notifier)
-                            .toggle(FavoriteTeam(
-                              id: match.awayTeamId ?? '',
-                              name: match.awayTeam,
-                            )),
+                            .toggle(
+                              FavoriteTeam(
+                                id: match.awayTeamId ?? '',
+                                name: match.awayTeam,
+                              ),
+                            ),
                       ),
                       const SizedBox(height: 16),
                       // ── Info Cards ──────────────────────────────────
-                      _InfoSection(match: match, ac: ac),
+                      _InfoSection(match: match),
                       const SizedBox(height: 16),
                       // ── Olaylar / Kadro / İstatistik ─────────────────
                       MatchDetailSections(match: match),
@@ -89,8 +92,7 @@ class MatchDetailPage extends ConsumerWidget {
 // ─── App Bar ───────────────────────────────────────────────────────────────────
 
 class _DetailAppBar extends StatelessWidget {
-  const _DetailAppBar({required this.ac, required this.league});
-  final AppColors ac;
+  const _DetailAppBar({required this.league});
   final String? league;
 
   @override
@@ -106,12 +108,12 @@ class _DetailAppBar extends StatelessWidget {
               height: 36,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: ac.cardSurface,
-                border: Border.all(color: ac.cardBorder),
+                color: AppColors.cardSurface,
+                border: Border.all(color: AppColors.cardBorder),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: ac.textPrimary,
+                color: AppColors.textPrimary,
                 size: 16,
               ),
             ),
@@ -122,8 +124,8 @@ class _DetailAppBar extends StatelessWidget {
               league ?? 'Maç Detayı',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: ac.textSecondary,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
@@ -139,9 +141,8 @@ class _DetailAppBar extends StatelessWidget {
 // ─── Info Section ──────────────────────────────────────────────────────────────
 
 class _InfoSection extends StatelessWidget {
-  const _InfoSection({required this.match, required this.ac});
+  const _InfoSection({required this.match});
   final Match match;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +162,9 @@ class _InfoSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ac.cardBorder),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -173,7 +174,6 @@ class _InfoSection extends StatelessWidget {
               icon: items[i].icon,
               label: items[i].label,
               value: items[i].value,
-              ac: ac,
               hasBorder: i > 0,
             ),
         ],
@@ -187,26 +187,22 @@ class _InfoRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
-    required this.ac,
     required this.hasBorder,
   });
 
   final IconData icon;
   final String label;
   final String value;
-  final AppColors ac;
   final bool hasBorder;
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Container(
       height: 52,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: hasBorder
-          ? BoxDecoration(
-              border: Border(top: BorderSide(color: ac.divider)),
+          ? const BoxDecoration(
+              border: Border(top: BorderSide(color: AppColors.divider)),
             )
           : null,
       child: Row(
@@ -216,15 +212,15 @@ class _InfoRow extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: primary.withValues(alpha: 0.1),
+              color: AppColors.accentGreen.withValues(alpha: 0.1),
             ),
-            child: Icon(icon, color: primary, size: 16),
+            child: Icon(icon, color: AppColors.accentGreen, size: 16),
           ),
           const SizedBox(width: 12),
           Text(
             label,
-            style: TextStyle(
-              color: ac.textSecondary,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -234,8 +230,8 @@ class _InfoRow extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: ac.textPrimary,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
               fontSize: 13,
               fontWeight: FontWeight.w700,
             ),

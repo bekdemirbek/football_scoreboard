@@ -18,38 +18,35 @@ class MatchDetailSections extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailAsync = ref.watch(matchDetailProvider(match));
-    final ac = Theme.of(context).extension<AppColors>()!;
 
     return detailAsync.when(
       loading: () => const _LoadingSkeleton(),
-      error: (_, _) => _InfoNotice(
-        ac: ac,
+      error: (_, _) => const _InfoNotice(
         message: 'Maç detayları yüklenirken bir sorun oluştu.',
       ),
       data: (detail) {
         if (!detail.available) {
           return _InfoNotice(
-            ac: ac,
             message: detail.reason ?? 'Bu maç için detay verisi bulunamadı.',
           );
         }
         if (!detail.hasAnyData) {
-          return _InfoNotice(
-            ac: ac,
+          return const _InfoNotice(
             message: 'Bu maç için henüz kadro veya istatistik yayınlanmadı.',
           );
         }
 
-        return _DetailTabs(detail: detail);
+        return _DetailTabs(detail: detail, match: match);
       },
     );
   }
 }
 
 class _DetailTabs extends StatefulWidget {
-  const _DetailTabs({required this.detail});
+  const _DetailTabs({required this.detail, required this.match});
 
   final MatchDetail detail;
+  final Match match;
 
   @override
   State<_DetailTabs> createState() => _DetailTabsState();
@@ -60,7 +57,6 @@ class _DetailTabsState extends State<_DetailTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final detail = widget.detail;
 
     final tabs = <(String, Widget)>[
@@ -70,7 +66,15 @@ class _DetailTabsState extends State<_DetailTabs> {
           'Kadro',
           MatchLineupsTab(home: detail.homeLineup!, away: detail.awayLineup!),
         ),
-      if (detail.hasStats) ('İstatistik', MatchStatsTab(rows: detail.statRows)),
+      if (detail.hasStats)
+        (
+          'İstatistik',
+          MatchStatsTab(
+            rows: detail.statRows,
+            homeTeam: widget.match.homeTeam,
+            awayTeam: widget.match.awayTeam,
+          ),
+        ),
     ];
 
     if (tabs.isEmpty) return const SizedBox.shrink();
@@ -83,7 +87,6 @@ class _DetailTabsState extends State<_DetailTabs> {
           labels: [for (final t in tabs) t.$1],
           selectedIndex: index,
           onSelected: (i) => setState(() => _index = i),
-          ac: ac,
         ),
         const SizedBox(height: 14),
         AnimatedSwitcher(
@@ -100,23 +103,21 @@ class _SegmentedTabBar extends StatelessWidget {
     required this.labels,
     required this.selectedIndex,
     required this.onSelected,
-    required this.ac,
   });
 
   final List<String> labels;
   final int selectedIndex;
   final ValueChanged<int> onSelected;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final onPrimary = Theme.of(context).colorScheme.onPrimary;
+    const primary = AppColors.accentGreen;
+    const onPrimary = AppColors.bgPrimary;
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: ac.unselectedPill,
+        color: AppColors.unselectedPill,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -136,7 +137,9 @@ class _SegmentedTabBar extends StatelessWidget {
                   child: Text(
                     labels[i],
                     style: TextStyle(
-                      color: i == selectedIndex ? onPrimary : ac.textSecondary,
+                      color: i == selectedIndex
+                          ? onPrimary
+                          : AppColors.textSecondary,
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                     ),
@@ -155,7 +158,6 @@ class _LoadingSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     return Column(
       children: [
         ShimmerBox(height: 40, borderRadius: 12),
@@ -163,9 +165,9 @@ class _LoadingSkeleton extends StatelessWidget {
         for (final height in const [110.0, 160.0]) ...[
           Container(
             decoration: BoxDecoration(
-              color: ac.cardSurface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ac.cardBorder),
+              color: AppColors.cardSurface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.cardBorder),
             ),
             padding: const EdgeInsets.all(16),
             child: ShimmerBox(height: height, borderRadius: 10),
@@ -178,9 +180,8 @@ class _LoadingSkeleton extends StatelessWidget {
 }
 
 class _InfoNotice extends StatelessWidget {
-  const _InfoNotice({required this.ac, required this.message});
+  const _InfoNotice({required this.message});
 
-  final AppColors ac;
   final String message;
 
   @override
@@ -188,19 +189,23 @@ class _InfoNotice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ac.cardBorder),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline_rounded, color: ac.textTertiary, size: 20),
+          const Icon(
+            Icons.info_outline_rounded,
+            color: AppColors.textTertiary,
+            size: 20,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
-                color: ac.textSecondary,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
                 fontSize: 12,
                 height: 1.4,
                 fontWeight: FontWeight.w600,

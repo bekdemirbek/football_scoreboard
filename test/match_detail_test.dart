@@ -115,7 +115,7 @@ void main() {
             apiFootballServiceProvider.overrideWithValue(apiFootball),
           ],
           child: MaterialApp(
-            theme: AppTheme.lightTheme,
+            theme: AppTheme.darkTheme,
             home: MatchDetailPage(match: match),
           ),
         ),
@@ -148,7 +148,7 @@ void main() {
             apiFootballServiceProvider.overrideWithValue(apiFootball),
           ],
           child: MaterialApp(
-            theme: AppTheme.lightTheme,
+            theme: AppTheme.darkTheme,
             home: MatchDetailPage(match: match),
           ),
         ),

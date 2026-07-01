@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
 import '../../../models/match_lineup.dart';
 
 class LineupPitch extends StatelessWidget {
@@ -10,15 +11,15 @@ class LineupPitch extends StatelessWidget {
   final TeamLineup home;
   final TeamLineup away;
 
-  static const _homeColor = Color(0xFF2563EB);
-  static const _awayColor = Color(0xFFE0A639);
+  static const _homeColor = AppColors.accentGreen;
+  static const _awayColor = AppColors.accentOrange;
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 0.72,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -97,20 +98,24 @@ class _PlayerDot extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // ── badgeBg arka planlı yuvarlak rozet + takım renginde halka + glow ──
         Container(
-          width: 26,
-          height: 26,
+          width: 30,
+          height: 30,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: color,
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.85),
-              width: 1.5,
-            ),
+            color: AppColors.badgeBg,
+            border: Border.all(color: color, width: 2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: color.withValues(alpha: 0.55),
+                blurRadius: 10,
+                spreadRadius: -1,
+              ),
+              const BoxShadow(
+                color: AppColors.cardShadow,
                 blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -118,7 +123,7 @@ class _PlayerDot extends StatelessWidget {
           child: Text(
             '${player.number ?? ''}',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 11,
               fontWeight: FontWeight.w800,
             ),
@@ -130,7 +135,7 @@ class _PlayerDot extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 8.5,
             fontWeight: FontWeight.w700,
             shadows: [Shadow(color: Colors.black, blurRadius: 3)],
@@ -151,10 +156,10 @@ class _PitchPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final bg = Paint()..color = const Color(0xFF1E5631);
+    final bg = Paint()..color = AppColors.pitchField;
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bg);
 
-    final stripe = Paint()..color = Colors.white.withValues(alpha: 0.035);
+    final stripe = Paint()..color = AppColors.pitchFieldStripe;
     const stripeCount = 8;
     final stripeHeight = size.height / stripeCount;
     for (var i = 0; i < stripeCount; i += 2) {
@@ -165,7 +170,7 @@ class _PitchPainter extends CustomPainter {
     }
 
     final line = Paint()
-      ..color = Colors.white.withValues(alpha: 0.55)
+      ..color = AppColors.pitchLine
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4;
 
@@ -186,7 +191,7 @@ class _PitchPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(size.width / 2, size.height / 2),
       2,
-      Paint()..color = Colors.white.withValues(alpha: 0.55),
+      Paint()..color = AppColors.pitchLine,
     );
 
     final boxWidth = size.width * 0.5;

@@ -6,12 +6,12 @@ import '../../models/football_league.dart';
 import '../../models/match.dart';
 import '../../providers/api_providers.dart';
 import '../../widgets/fade_route.dart';
+import '../../widgets/screen_header.dart';
 import '../../widgets/shimmer_box.dart';
 import 'match_detail_page.dart';
 import 'widgets/league_selector.dart';
 import 'widgets/match_card.dart';
 import 'widgets/matches_date_strip.dart';
-import 'widgets/matches_header.dart';
 
 class MatchesPage extends ConsumerWidget {
   const MatchesPage({super.key});
@@ -72,20 +72,34 @@ class _MatchesContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final selectedLeague = ref.watch(selectedLeagueProvider);
     final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
-    final grouped = _groupByLeague(matches);
+    final query = ref.watch(matchesSearchProvider).trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? matches
+        : matches
+              .where(
+                (m) =>
+                    m.homeTeam.toLowerCase().contains(query) ||
+                    m.awayTeam.toLowerCase().contains(query),
+              )
+              .toList();
+    final grouped = _groupByLeague(filtered);
 
     return RefreshIndicator(
       onRefresh: onRefresh,
-      color: Theme.of(context).colorScheme.primary,
-      backgroundColor: ac.cardSurface,
+      color: AppColors.accentGreen,
+      backgroundColor: AppColors.cardSurface,
       child: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 100),
         children: [
-          const MatchesHeader(),
+          ScreenHeader(
+            title: 'Canlı Skorlar',
+            searchHint: 'Takım ara…',
+            onSearchChanged: (q) =>
+                ref.read(matchesSearchProvider.notifier).set(q),
+          ),
           const SizedBox(height: 14),
           MatchesDateStrip(
             selectedDate: selectedDate,
@@ -101,12 +115,27 @@ class _MatchesContent extends ConsumerWidget {
           const SizedBox(height: 12),
           LeagueSelector(
             selectedLeague: selectedLeague,
+            leagues: const [allLeaguesOption, ...footballLeagues],
             onLeagueSelected: (league) =>
                 ref.read(selectedLeagueProvider.notifier).selectLeague(league),
           ),
           const SizedBox(height: 20),
+          if (grouped.isEmpty && query.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Center(
+                child: Text(
+                  '"$query" için maç bulunamadı.',
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           for (final entry in grouped.entries) ...[
-            _LeagueSectionHeader(title: entry.key, ac: ac),
+            _LeagueSectionHeader(title: entry.key),
             const SizedBox(height: 10),
             for (final match in entry.value) ...[
               MatchCard(
@@ -137,14 +166,18 @@ class _MatchesLoading extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final selectedLeague = ref.watch(selectedLeagueProvider);
 
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 100),
       children: [
-        const MatchesHeader(),
+        ScreenHeader(
+          title: 'Canlı Skorlar',
+          searchHint: 'Takım ara…',
+          onSearchChanged: (q) =>
+              ref.read(matchesSearchProvider.notifier).set(q),
+        ),
         const SizedBox(height: 14),
         MatchesDateStrip(
           selectedDate: selectedDate,
@@ -160,6 +193,7 @@ class _MatchesLoading extends ConsumerWidget {
         const SizedBox(height: 12),
         LeagueSelector(
           selectedLeague: selectedLeague,
+          leagues: const [allLeaguesOption, ...footballLeagues],
           onLeagueSelected: (league) =>
               ref.read(selectedLeagueProvider.notifier).selectLeague(league),
         ),
@@ -168,14 +202,14 @@ class _MatchesLoading extends ConsumerWidget {
         ShimmerBox(width: 120, height: 22, borderRadius: 6),
         const SizedBox(height: 12),
         for (var i = 0; i < 4; i++) ...[
-          _ShimmerMatchCard(ac: ac),
+          const _ShimmerMatchCard(),
           const SizedBox(height: 10),
         ],
         const SizedBox(height: 16),
         ShimmerBox(width: 100, height: 22, borderRadius: 6),
         const SizedBox(height: 12),
         for (var i = 0; i < 3; i++) ...[
-          _ShimmerMatchCard(ac: ac),
+          const _ShimmerMatchCard(),
           const SizedBox(height: 10),
         ],
       ],
@@ -184,17 +218,16 @@ class _MatchesLoading extends ConsumerWidget {
 }
 
 class _ShimmerMatchCard extends StatelessWidget {
-  const _ShimmerMatchCard({required this.ac});
-  final AppColors ac;
+  const _ShimmerMatchCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 80,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: ac.cardSurface,
-        border: Border.all(color: ac.cardBorder),
+        borderRadius: BorderRadius.circular(20),
+        color: AppColors.cardSurface,
+        border: Border.all(color: AppColors.cardBorder),
       ),
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -244,15 +277,19 @@ class _MatchesMessage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
+    const primary = AppColors.accentGreen;
     final selectedLeague = ref.watch(selectedLeagueProvider);
 
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 100),
       children: [
-        const MatchesHeader(),
+        ScreenHeader(
+          title: 'Canlı Skorlar',
+          searchHint: 'Takım ara…',
+          onSearchChanged: (q) =>
+              ref.read(matchesSearchProvider.notifier).set(q),
+        ),
         const SizedBox(height: 14),
         MatchesDateStrip(
           selectedDate: selectedDate,
@@ -268,6 +305,7 @@ class _MatchesMessage extends ConsumerWidget {
         const SizedBox(height: 12),
         LeagueSelector(
           selectedLeague: selectedLeague,
+          leagues: const [allLeaguesOption, ...footballLeagues],
           onLeagueSelected: (league) =>
               ref.read(selectedLeagueProvider.notifier).selectLeague(league),
         ),
@@ -292,8 +330,8 @@ class _MatchesMessage extends ConsumerWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: ac.textPrimary,
+          style: const TextStyle(
+            color: AppColors.textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.3,
@@ -305,7 +343,11 @@ class _MatchesMessage extends ConsumerWidget {
           textAlign: TextAlign.center,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: ac.textSecondary, fontSize: 13, height: 1.5),
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 13,
+            height: 1.5,
+          ),
         ),
         const SizedBox(height: 24),
         Center(
@@ -323,29 +365,28 @@ class _MatchesMessage extends ConsumerWidget {
 // ─── League Section Header ─────────────────────────────────────────────────────
 
 class _LeagueSectionHeader extends StatelessWidget {
-  const _LeagueSectionHeader({required this.title, required this.ac});
+  const _LeagueSectionHeader({required this.title});
   final String title;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: ac.leagueBadgeBg,
+            color: AppColors.leagueBadgeBg,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: primary.withValues(alpha: 0.25)),
+            border: Border.all(
+              color: AppColors.accentGreen.withValues(alpha: 0.25),
+            ),
           ),
           child: Text(
             title.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: primary,
+            style: const TextStyle(
+              color: AppColors.accentGreen,
               fontSize: 10,
               fontWeight: FontWeight.w800,
               letterSpacing: 1.2,
@@ -353,7 +394,7 @@ class _LeagueSectionHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Expanded(child: Divider(height: 1, color: ac.divider)),
+        const Expanded(child: Divider(height: 1, color: AppColors.divider)),
       ],
     );
   }
@@ -404,10 +445,6 @@ Future<void> _showCalendarPicker({
   required DateTime selectedDate,
   required ValueChanged<DateTime> onDateSelected,
 }) async {
-  final ac = Theme.of(context).extension<AppColors>()!;
-  final primary = Theme.of(context).colorScheme.primary;
-  final isDark = Theme.of(context).brightness == Brightness.dark;
-
   final picked = await showDatePicker(
     context: context,
     initialDate: selectedDate,
@@ -421,20 +458,19 @@ Future<void> _showCalendarPicker({
       return Theme(
         data: ThemeData(
           useMaterial3: true,
-          brightness: isDark ? Brightness.dark : Brightness.light,
-          colorScheme: ColorScheme(
-            brightness: isDark ? Brightness.dark : Brightness.light,
-            primary: primary,
-            onPrimary: isDark ? const Color(0xFF003320) : Colors.white,
-            secondary: primary,
-            onSecondary: Colors.white,
-            error: Colors.red,
+          brightness: Brightness.dark,
+          colorScheme: const ColorScheme.dark(
+            primary: AppColors.accentGreen,
+            onPrimary: AppColors.bgPrimary,
+            secondary: AppColors.accentGreen,
+            onSecondary: AppColors.bgPrimary,
+            error: AppColors.liveRed,
             onError: Colors.white,
-            surface: isDark ? const Color(0xFF111827) : Colors.white,
-            onSurface: ac.textPrimary,
+            surface: AppColors.cardBg,
+            onSurface: AppColors.textPrimary,
           ),
           dialogTheme: DialogThemeData(
-            backgroundColor: isDark ? const Color(0xFF111827) : Colors.white,
+            backgroundColor: AppColors.cardBg,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

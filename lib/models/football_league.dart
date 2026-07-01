@@ -10,6 +10,10 @@ class FootballLeague {
   final List<String> searchTerms;
 }
 
+/// Maç skorları sayfasında "elimizdeki tüm liglerin maçlarını aynı anda göster"
+/// seçeneği. id == 'ALL' özel olarak ele alınır (bkz. MatchesNotifier).
+const allLeaguesOption = FootballLeague(id: 'ALL', name: 'Tüm Ligler');
+
 const footballLeagues = <FootballLeague>[
   FootballLeague(id: 'WC', name: 'Dünya Kupası'),
   FootballLeague(id: 'PL', name: 'Premier Lig'),

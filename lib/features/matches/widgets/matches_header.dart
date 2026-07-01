@@ -7,9 +7,6 @@ class MatchesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -19,14 +16,10 @@ class MatchesHeader extends StatelessWidget {
           height: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [ac.headerGradientStart, ac.headerGradientEnd],
-            ),
+            gradient: AppGradients.header,
             boxShadow: [
               BoxShadow(
-                color: ac.headerGradientStart.withValues(alpha: 0.4),
+                color: AppColors.headerGradientStart.withValues(alpha: 0.4),
                 blurRadius: 12,
                 spreadRadius: -2,
               ),
@@ -41,8 +34,11 @@ class MatchesHeader extends StatelessWidget {
         const SizedBox(width: 10),
         // ── Brand Name ──────────────────────────────────────────────────
         ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [ac.headerGradientStart, ac.headerGradientEnd],
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [
+              AppColors.headerGradientStart,
+              AppColors.headerGradientEnd,
+            ],
           ).createShader(bounds),
           child: const Text(
             'MAÇKART',
@@ -58,10 +54,10 @@ class MatchesHeader extends StatelessWidget {
         // ── Notification Button ─────────────────────────────────────────
         _IconBtn(
           icon: Icons.notifications_outlined,
-          color: ac.textSecondary,
+          color: AppColors.textSecondary,
           onTap: () {},
           badge: true,
-          badgeColor: primary,
+          badgeColor: AppColors.accentGreen,
         ),
       ],
     );
@@ -111,9 +107,7 @@ class _IconBtn extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: badgeColor,
                   border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).extension<AppColors>()!.gradientStart,
+                    color: AppColors.gradientStart,
                     width: 1.5,
                   ),
                 ),

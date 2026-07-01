@@ -3,13 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/app_theme.dart';
 import '../../models/favorite_team.dart';
-import '../../models/football_league.dart';
 import '../../models/match.dart';
 import '../../models/standing.dart';
 import '../../providers/api_providers.dart';
 import '../../widgets/fade_route.dart';
+import '../../widgets/screen_header.dart';
 import '../../widgets/shimmer_box.dart';
 import '../matches/match_detail_page.dart';
+import '../team/team_squad_page.dart';
+import '../matches/widgets/league_selector.dart';
 import '../matches/widgets/match_card.dart';
 import '../matches/widgets/team_badge.dart';
 
@@ -20,7 +22,6 @@ class StandingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final standings = ref.watch(standingsProvider);
     final selectedLeague = ref.watch(selectedStandingsLeagueProvider);
-    final ac = Theme.of(context).extension<AppColors>()!;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -28,28 +29,26 @@ class StandingsPage extends ConsumerWidget {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: () => ref.read(standingsProvider.notifier).refresh(),
-          color: Theme.of(context).colorScheme.primary,
-          backgroundColor: ac.cardSurface,
+          color: AppColors.accentGreen,
+          backgroundColor: AppColors.cardSurface,
           child: ListView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(16, 18, 16, 100),
             children: [
-              // ── Header ───────────────────────────────────────────────
-              _StandingsHeader(ac: ac),
-              const SizedBox(height: 16),
-              // ── League Dropdown ──────────────────────────────────────
-              _PremiumDropdown(
-                selectedLeague: selectedLeague,
-                ac: ac,
-                onChanged: (league) {
-                  if (league == null) return;
-                  ref
-                      .read(selectedStandingsLeagueProvider.notifier)
-                      .selectLeague(league);
-                },
+              ScreenHeader(
+                title: 'Puan Durumu',
+                searchHint: 'Takım ara…',
+                onSearchChanged: (q) =>
+                    ref.read(standingsSearchProvider.notifier).set(q),
               ),
               const SizedBox(height: 16),
-              // ── Content ──────────────────────────────────────────────
+              LeagueSelector(
+                selectedLeague: selectedLeague,
+                onLeagueSelected: (league) => ref
+                    .read(selectedStandingsLeagueProvider.notifier)
+                    .selectLeague(league),
+              ),
+              const SizedBox(height: 16),
               standings.when(
                 loading: () => const _StandingsSkeleton(),
                 error: (error, _) => _StandingsMessage(
@@ -68,7 +67,26 @@ class StandingsPage extends ConsumerWidget {
                           ref.read(standingsProvider.notifier).refresh(),
                     );
                   }
-                  return _GroupedStandings(items: items);
+                  final query = ref
+                      .watch(standingsSearchProvider)
+                      .trim()
+                      .toLowerCase();
+                  final filtered = query.isEmpty
+                      ? items
+                      : items
+                            .where(
+                              (s) => s.teamName.toLowerCase().contains(query),
+                            )
+                            .toList();
+                  if (filtered.isEmpty) {
+                    return _StandingsMessage(
+                      title: 'Sonuç yok',
+                      message: '"$query" için eşleşen takım yok.',
+                      onPressed: () =>
+                          ref.read(standingsSearchProvider.notifier).set(''),
+                    );
+                  }
+                  return _GroupedStandings(items: filtered);
                 },
               ),
               const SizedBox(height: 16),
@@ -76,103 +94,6 @@ class StandingsPage extends ConsumerWidget {
               const _KnockoutSection(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Header ────────────────────────────────────────────────────────────────────
-
-class _StandingsHeader extends StatelessWidget {
-  const _StandingsHeader({required this.ac});
-  final AppColors ac;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [ac.headerGradientStart, ac.headerGradientEnd],
-          ).createShader(bounds),
-          child: const Text(
-            'Puan Tablosu',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.5,
-            ),
-          ),
-        ),
-        const Spacer(),
-        Icon(
-          Icons.leaderboard_rounded,
-          color: ac.headerGradientStart,
-          size: 24,
-        ),
-      ],
-    );
-  }
-}
-
-// ─── Premium Dropdown ──────────────────────────────────────────────────────────
-
-class _PremiumDropdown extends StatelessWidget {
-  const _PremiumDropdown({
-    required this.selectedLeague,
-    required this.ac,
-    required this.onChanged,
-  });
-
-  final FootballLeague selectedLeague;
-  final AppColors ac;
-  final ValueChanged<FootballLeague?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final leagues = footballLeagues.where((l) => l.id != null).toList();
-
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: primary.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: primary.withValues(alpha: 0.08),
-            blurRadius: 12,
-            spreadRadius: -2,
-          ),
-        ],
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<FootballLeague>(
-          value: selectedLeague,
-          isExpanded: true,
-          icon: Icon(Icons.keyboard_arrow_down_rounded, color: primary),
-          dropdownColor: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF1A2540)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          style: TextStyle(
-            color: ac.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w800,
-          ),
-          items: leagues
-              .map(
-                (league) => DropdownMenuItem(
-                  value: league,
-                  child: Text(league.name, overflow: TextOverflow.ellipsis),
-                ),
-              )
-              .toList(),
-          onChanged: onChanged,
         ),
       ),
     );
@@ -198,7 +119,6 @@ class _GroupedStandings extends StatelessWidget {
       byGroup.putIfAbsent(item.group ?? '', () => <Standing>[]).add(item);
     }
 
-    final ac = Theme.of(context).extension<AppColors>()!;
     final entries = byGroup.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
 
@@ -210,8 +130,8 @@ class _GroupedStandings extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
             child: Text(
               entry.key,
-              style: TextStyle(
-                color: ac.textPrimary,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
               ),
@@ -233,15 +153,17 @@ class _StandingsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-
     return Container(
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ac.cardBorder),
-        boxShadow: [
-          BoxShadow(color: ac.cardShadow, blurRadius: 16, spreadRadius: -4),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.cardShadow,
+            blurRadius: 16,
+            spreadRadius: -4,
+          ),
         ],
       ),
       clipBehavior: Clip.antiAlias,
@@ -249,7 +171,11 @@ class _StandingsTable extends StatelessWidget {
         children: [
           const _TableHeader(),
           for (int i = 0; i < items.length; i++)
-            _StandingRow(standing: items[i], isLast: i == items.length - 1),
+            _StandingRow(
+              standing: items[i],
+              total: items.length,
+              isLast: i == items.length - 1,
+            ),
         ],
       ),
     );
@@ -263,20 +189,17 @@ class _TableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Container(
       height: 38,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ac.headerGradientStart.withValues(alpha: isDark ? 0.2 : 0.12),
-            ac.headerGradientEnd.withValues(alpha: isDark ? 0.15 : 0.08),
+            AppColors.headerGradientStart.withValues(alpha: 0.2),
+            AppColors.headerGradientEnd.withValues(alpha: 0.15),
           ],
         ),
-        border: Border(bottom: BorderSide(color: ac.divider)),
+        border: const Border(bottom: BorderSide(color: AppColors.divider)),
       ),
       child: const Row(
         children: [
@@ -300,12 +223,11 @@ class _HeaderCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     return Text(
       text,
       textAlign: end ? TextAlign.end : TextAlign.start,
-      style: TextStyle(
-        color: ac.textTertiary,
+      style: const TextStyle(
+        color: AppColors.textTertiary,
         fontSize: 9,
         fontWeight: FontWeight.w800,
         letterSpacing: 0.8,
@@ -317,51 +239,61 @@ class _HeaderCell extends StatelessWidget {
 // ─── Standing Row ──────────────────────────────────────────────────────────────
 
 class _StandingRow extends ConsumerWidget {
-  const _StandingRow({required this.standing, required this.isLast});
+  const _StandingRow({
+    required this.standing,
+    required this.total,
+    required this.isLast,
+  });
   final Standing standing;
+  final int total;
   final bool isLast;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isFav =
-        ref.watch(favoriteTeamsProvider.notifier).isFavoriteByName(
-          standing.teamName,
-        );
+    final isFav = ref
+        .watch(favoriteTeamsProvider.notifier)
+        .isFavoriteByName(standing.teamName);
 
-    // Zone detection (Premier League style — adapt as needed)
+    // Bölge: ilk 4 → Avrupa kupaları (yeşil), son 3 → küme düşme (kırmızı).
     final Color? zoneColor = standing.rank <= 4
-        ? ac.championColor
-        : standing.rank == 5
-        ? ac.europaColor
-        : standing.rank >= 18
-        ? ac.relegationColor
+        ? AppColors.championColor
+        : standing.rank > total - 3
+        ? AppColors.relegationColor
         : null;
 
     final Color rowBg = standing.rank == 1
-        ? ac.goldColor.withValues(alpha: isDark ? 0.12 : 0.07)
+        ? AppColors.goldColor.withValues(alpha: 0.12)
         : zoneColor != null
-        ? zoneColor.withValues(alpha: isDark ? 0.06 : 0.04)
+        ? zoneColor.withValues(alpha: 0.06)
         : Colors.transparent;
 
     return InkWell(
-      onTap: () => ref.read(favoriteTeamsProvider.notifier).toggle(
-        FavoriteTeam(id: standing.teamId, name: standing.teamName),
+      onTap: () => Navigator.of(context).push(
+        FadeRoute(
+          child: TeamSquadPage(
+            teamId: standing.teamId,
+            teamName: standing.teamName,
+          ),
+        ),
       ),
+      onLongPress: () => ref
+          .read(favoriteTeamsProvider.notifier)
+          .toggle(FavoriteTeam(id: standing.teamId, name: standing.teamName)),
       child: Container(
-        height: 46,
+        height: 52,
         decoration: BoxDecoration(
           color: rowBg,
           border: isLast
               ? null
-              : Border(top: BorderSide(color: ac.divider, width: 0.5)),
+              : const Border(
+                  top: BorderSide(color: AppColors.divider, width: 0.5),
+                ),
         ),
         child: Row(
           children: [
-            // ── Zone stripe ─────────────────────────────────────────
+            // ── Zone stripe (ince renkli şerit) ─────────────────────
             Container(
-              width: 3,
+              width: 4,
               height: double.infinity,
               decoration: BoxDecoration(
                 gradient: zoneColor != null
@@ -378,11 +310,7 @@ class _StandingRow extends ConsumerWidget {
             // ── Rank ────────────────────────────────────────────────
             SizedBox(
               width: 22,
-              child: _RankBadge(
-                rank: standing.rank,
-                zoneColor: zoneColor,
-                ac: ac,
-              ),
+              child: _RankBadge(rank: standing.rank, zoneColor: zoneColor),
             ),
             const SizedBox(width: 8),
             // ── Team ────────────────────────────────────────────────
@@ -397,28 +325,28 @@ class _StandingRow extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: ac.textPrimary,
+                        color: AppColors.textPrimary,
                         fontSize: 12,
                         fontWeight: isFav ? FontWeight.w800 : FontWeight.w600,
                       ),
                     ),
                   ),
                   if (isFav)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         Icons.star_rounded,
-                        color: ac.goldColor,
+                        color: AppColors.goldColor,
                         size: 13,
                       ),
                     ),
                 ],
               ),
             ),
-            _StatCell(standing.played, ac),
-            _StatCell(standing.win, ac),
-            _StatCell(standing.draw, ac),
-            _StatCell(standing.loss, ac),
+            _StatCell(standing.played),
+            _StatCell(standing.win),
+            _StatCell(standing.draw),
+            _StatCell(standing.loss),
             // ── Points ──────────────────────────────────────────────
             SizedBox(
               width: 40,
@@ -427,8 +355,8 @@ class _StandingRow extends ConsumerWidget {
                 child: Text(
                   '${standing.points}',
                   textAlign: TextAlign.end,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                  style: const TextStyle(
+                    color: AppColors.accentGreen,
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                   ),
@@ -443,14 +371,9 @@ class _StandingRow extends ConsumerWidget {
 }
 
 class _RankBadge extends StatelessWidget {
-  const _RankBadge({
-    required this.rank,
-    required this.zoneColor,
-    required this.ac,
-  });
+  const _RankBadge({required this.rank, required this.zoneColor});
   final int rank;
   final Color? zoneColor;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
@@ -459,7 +382,7 @@ class _RankBadge extends StatelessWidget {
       '$rank',
       textAlign: TextAlign.center,
       style: TextStyle(
-        color: zoneColor ?? ac.textSecondary,
+        color: zoneColor ?? AppColors.textSecondary,
         fontSize: 12,
         fontWeight: isTop ? FontWeight.w900 : FontWeight.w700,
       ),
@@ -468,9 +391,8 @@ class _RankBadge extends StatelessWidget {
 }
 
 class _StatCell extends StatelessWidget {
-  const _StatCell(this.value, this.ac);
+  const _StatCell(this.value);
   final int value;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
@@ -479,8 +401,8 @@ class _StatCell extends StatelessWidget {
       child: Text(
         '$value',
         textAlign: TextAlign.end,
-        style: TextStyle(
-          color: ac.textSecondary,
+        style: const TextStyle(
+          color: AppColors.textSecondary,
           fontSize: 11,
           fontWeight: FontWeight.w600,
         ),
@@ -496,14 +418,12 @@ class _Legend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    return Wrap(
+    return const Wrap(
       spacing: 14,
       runSpacing: 6,
       children: [
-        _LegendItem(color: ac.championColor, label: 'Şampiyonlar Ligi'),
-        _LegendItem(color: ac.europaColor, label: 'Avrupa Ligi'),
-        _LegendItem(color: ac.relegationColor, label: 'Küme düşme'),
+        _LegendItem(color: AppColors.championColor, label: 'Avrupa kupaları'),
+        _LegendItem(color: AppColors.relegationColor, label: 'Küme düşme'),
       ],
     );
   }
@@ -516,7 +436,6 @@ class _LegendItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -534,8 +453,8 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: TextStyle(
-            color: ac.textSecondary,
+          style: const TextStyle(
+            color: AppColors.textSecondary,
             fontSize: 10,
             fontWeight: FontWeight.w600,
           ),
@@ -577,7 +496,6 @@ class _KnockoutSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final knockout = ref.watch(knockoutMatchesProvider);
-    final ac = Theme.of(context).extension<AppColors>()!;
     final favNotifier = ref.watch(favoriteTeamsProvider.notifier);
 
     return knockout.when(
@@ -598,18 +516,18 @@ class _KnockoutSection extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
                   Icon(
                     Icons.emoji_events_rounded,
-                    color: ac.headerGradientStart,
+                    color: AppColors.headerGradientStart,
                     size: 18,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     'Eleme Eşleşmeleri',
                     style: TextStyle(
-                      color: ac.textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                     ),
@@ -618,7 +536,7 @@ class _KnockoutSection extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               for (final stage in orderedStages) ...[
-                _StageHeader(label: _stageLabels[stage] ?? stage, ac: ac),
+                _StageHeader(label: _stageLabels[stage] ?? stage),
                 const SizedBox(height: 8),
                 for (final match in byStage[stage]!) ...[
                   MatchCard(
@@ -643,26 +561,26 @@ class _KnockoutSection extends ConsumerWidget {
 }
 
 class _StageHeader extends StatelessWidget {
-  const _StageHeader({required this.label, required this.ac});
+  const _StageHeader({required this.label});
   final String label;
-  final AppColors ac;
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: ac.leagueBadgeBg,
+            color: AppColors.leagueBadgeBg,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: primary.withValues(alpha: 0.25)),
+            border: Border.all(
+              color: AppColors.accentGreen.withValues(alpha: 0.25),
+            ),
           ),
           child: Text(
             label.toUpperCase(),
-            style: TextStyle(
-              color: primary,
+            style: const TextStyle(
+              color: AppColors.accentGreen,
               fontSize: 10,
               fontWeight: FontWeight.w800,
               letterSpacing: 1.0,
@@ -670,7 +588,7 @@ class _StageHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Expanded(child: Divider(height: 1, color: ac.divider)),
+        const Expanded(child: Divider(height: 1, color: AppColors.divider)),
       ],
     );
   }
@@ -683,23 +601,24 @@ class _StandingsSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     return Container(
       decoration: BoxDecoration(
-        color: ac.cardSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ac.cardBorder),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          Container(height: 38, color: ac.shimmerBase),
+          Container(height: 38, color: AppColors.shimmerBase),
           for (var i = 0; i < 8; i++)
             Container(
-              height: 46,
+              height: 52,
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: ac.divider, width: 0.5)),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: AppColors.divider, width: 0.5),
+                ),
               ),
               child: Row(
                 children: [
@@ -738,9 +657,6 @@ class _StandingsMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 54),
       child: Column(
@@ -750,17 +666,23 @@ class _StandingsMessage extends StatelessWidget {
             height: 72,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: primary.withValues(alpha: 0.1),
-              border: Border.all(color: primary.withValues(alpha: 0.2)),
+              color: AppColors.accentGreen.withValues(alpha: 0.1),
+              border: Border.all(
+                color: AppColors.accentGreen.withValues(alpha: 0.2),
+              ),
             ),
-            child: Icon(Icons.leaderboard_outlined, color: primary, size: 32),
+            child: const Icon(
+              Icons.leaderboard_outlined,
+              color: AppColors.accentGreen,
+              size: 32,
+            ),
           ),
           const SizedBox(height: 18),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: ac.textPrimary,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -771,8 +693,8 @@ class _StandingsMessage extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: ac.textSecondary,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
               fontSize: 13,
               height: 1.5,
             ),

@@ -11,19 +11,18 @@ class MatchEventsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
     final relevant = detail.events
         .where((e) => e.isGoal || e.isCard || e.isSubstitution)
         .toList(growable: false);
 
     if (relevant.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
         child: Center(
           child: Text(
             'Bu maç için olay verisi yok.',
             style: TextStyle(
-              color: ac.textTertiary,
+              color: AppColors.textTertiary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -35,36 +34,27 @@ class MatchEventsTab extends StatelessWidget {
     return Column(
       children: [
         for (final event in relevant)
-          _EventRow(event: event, isHome: detail.isHomeEvent(event), ac: ac),
+          _EventRow(event: event, isHome: detail.isHomeEvent(event)),
       ],
     );
   }
 }
 
 class _EventRow extends StatelessWidget {
-  const _EventRow({
-    required this.event,
-    required this.isHome,
-    required this.ac,
-  });
+  const _EventRow({required this.event, required this.isHome});
 
   final MatchEvent event;
   final bool isHome;
-  final AppColors ac;
-
-  static const _yellowCard = Color(0xFFF4B400);
 
   @override
   Widget build(BuildContext context) {
-    final sideColor = isHome
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.secondary;
+    final sideColor = isHome ? AppColors.accentGreen : AppColors.accentOrange;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: ac.cardSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(12),
         border: Border(left: BorderSide(color: sideColor, width: 3)),
       ),
@@ -75,8 +65,8 @@ class _EventRow extends StatelessWidget {
             width: 30,
             child: Text(
               event.minuteLabel,
-              style: TextStyle(
-                color: ac.textSecondary,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
               ),
@@ -90,8 +80,8 @@ class _EventRow extends StatelessWidget {
               children: [
                 Text(
                   _title,
-                  style: TextStyle(
-                    color: ac.textPrimary,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                   ),
@@ -100,8 +90,8 @@ class _EventRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     _subtitle!,
-                    style: TextStyle(
-                      color: ac.textTertiary,
+                    style: const TextStyle(
+                      color: AppColors.textTertiary,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
@@ -110,7 +100,7 @@ class _EventRow extends StatelessWidget {
               ],
             ),
           ),
-          _EventTag(event: event, yellowCard: _yellowCard),
+          _EventTag(event: event),
         ],
       ),
     );
@@ -135,19 +125,17 @@ class _EventIcon extends StatelessWidget {
   const _EventIcon({required this.event});
   final MatchEvent event;
 
-  static const _yellowCard = Color(0xFFF4B400);
-
   @override
   Widget build(BuildContext context) {
     if (event.isGoal) {
       return _circle(
-        color: const Color(0xFF1E8E5A),
+        color: AppColors.accentGreen,
         child: const Icon(Icons.sports_soccer, color: Colors.white, size: 16),
       );
     }
     if (event.isCard) {
       return _circle(
-        color: event.isRedCard ? const Color(0xFFE53935) : _yellowCard,
+        color: event.isRedCard ? AppColors.liveRed : AppColors.goldColor,
         child: Container(
           width: 9,
           height: 13,
@@ -159,7 +147,7 @@ class _EventIcon extends StatelessWidget {
       );
     }
     return _circle(
-      color: const Color(0xFF64748B),
+      color: AppColors.textMuted,
       child: const Icon(
         Icons.swap_horiz_rounded,
         color: Colors.white,
@@ -180,9 +168,8 @@ class _EventIcon extends StatelessWidget {
 }
 
 class _EventTag extends StatelessWidget {
-  const _EventTag({required this.event, required this.yellowCard});
+  const _EventTag({required this.event});
   final MatchEvent event;
-  final Color yellowCard;
 
   @override
   Widget build(BuildContext context) {
@@ -207,15 +194,15 @@ class _EventTag extends StatelessWidget {
 
   (String, Color) get _tag {
     if (event.isGoal) {
-      if (event.isOwnGoal) return ('KENDİ KALESİNE', const Color(0xFFE53935));
-      if (event.isPenalty) return ('PENALTI GOLÜ', const Color(0xFF1E8E5A));
-      return ('GOL', const Color(0xFF1E8E5A));
+      if (event.isOwnGoal) return ('KENDİ KALESİNE', AppColors.liveRed);
+      if (event.isPenalty) return ('PENALTI GOLÜ', AppColors.accentGreen);
+      return ('GOL', AppColors.accentGreen);
     }
     if (event.isCard) {
       return event.isRedCard
-          ? ('KIRMIZI KART', const Color(0xFFE53935))
-          : ('SARI KART', yellowCard);
+          ? ('KIRMIZI KART', AppColors.liveRed)
+          : ('SARI KART', AppColors.goldColor);
     }
-    return ('DEĞİŞİKLİK', const Color(0xFF64748B));
+    return ('DEĞİŞİKLİK', AppColors.textMuted);
   }
 }

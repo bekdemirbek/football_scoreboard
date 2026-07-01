@@ -31,10 +31,12 @@ class Scorer {
 
     return Scorer(
       rank: rank,
-      playerName: _str(player, ['name', 'shortName']) ??
+      playerName:
+          _str(player, ['name', 'shortName']) ??
           _str(json, ['playerName', 'name']) ??
           'Bilinmeyen Oyuncu',
-      teamName: _str(team, ['name', 'shortName', 'tla']) ??
+      teamName:
+          _str(team, ['name', 'shortName', 'tla']) ??
           _str(json, ['teamName']) ??
           '',
       goals: _int(json['goals']),

@@ -30,31 +30,19 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final cardDecoration = BoxDecoration(
-      color: ac.cardSurface,
+      color: AppColors.cardSurface,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: highlightColor?.withValues(alpha: 0.35) ?? ac.cardBorder,
-        width: isDark ? 1.0 : 1.2,
+        color: highlightColor?.withValues(alpha: 0.35) ?? AppColors.cardBorder,
+        width: 1.0,
       ),
       boxShadow: [
         BoxShadow(
-          color:
-              glowColor?.withValues(alpha: isDark ? 0.18 : 0.08) ??
-              ac.cardShadow,
+          color: glowColor?.withValues(alpha: 0.18) ?? AppColors.cardShadow,
           blurRadius: glowColor != null ? 24 : 12,
           spreadRadius: glowColor != null ? -2 : -4,
         ),
-        if (!isDark)
-          BoxShadow(
-            color: Colors.white.withValues(alpha: 0.9),
-            blurRadius: 0,
-            spreadRadius: 0,
-            offset: const Offset(0, -1),
-          ),
       ],
     );
 
@@ -77,8 +65,10 @@ class GlassCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadius),
-          splashColor: (highlightColor ?? ac.cardBorder).withValues(alpha: 0.1),
-          highlightColor: (highlightColor ?? ac.cardBorder).withValues(
+          splashColor: (highlightColor ?? AppColors.cardBorder).withValues(
+            alpha: 0.1,
+          ),
+          highlightColor: (highlightColor ?? AppColors.cardBorder).withValues(
             alpha: 0.06,
           ),
           child: content,

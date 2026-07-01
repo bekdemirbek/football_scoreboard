@@ -20,7 +20,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: Scaffold(
           backgroundColor: Colors.white,
           body: Center(
@@ -53,7 +53,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: Scaffold(
           backgroundColor: Colors.white,
           body: Center(
