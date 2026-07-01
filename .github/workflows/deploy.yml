@@ -21,17 +21,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # NOTE: API_FOOTBALL_KEY is intentionally NOT embedded in the public
-      # build. It has a 100 req/day free-tier cap that a single visitor
-      # refreshing the page could exhaust, breaking the demo for everyone.
-      # The match detail "Kadro / İstatistik" tabs degrade gracefully and
-      # show a friendly notice instead. Run the app locally with your own
-      # key (see .env.example) to see the full match-detail feature.
+      # NOTE: no API key is embedded in the public web bundle. football-data.org
+      # only allows the browser Origin `http://localhost`, so the deployed site
+      # must go through a hosted proxy that calls the API server-side (token kept
+      # in the proxy's secret) and returns permissive CORS headers.
+      # Set the repo Actions Variable API_PROXY_URL to your deployed proxy URL
+      # (see tools/api_proxy/cloudflare-worker.js). If it is empty the demo still
+      # builds and shows the UI with graceful "no data" notices.
       - name: Build web
         run: |
           flutter build web --release \
             --base-href "/${{ github.event.repository.name }}/" \
-            --dart-define=FOOTBALL_DATA_API_KEY=${{ secrets.FOOTBALL_DATA_API_KEY }}
+            --dart-define=API_PROXY_URL=${{ vars.API_PROXY_URL }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

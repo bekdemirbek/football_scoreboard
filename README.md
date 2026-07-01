@@ -131,6 +131,22 @@ fuzzy team-name matching** (normalized, FC/CF/AC suffixes stripped).
   skipped while the rest still render (`fetchMatchesAllLeagues`).
 - Every provider is `AsyncValue`, so loading/empty/error are explicit UI states.
 
+### CORS & the hosted proxy (why the live demo needs one)
+
+football-data.org's browser CORS policy only allows the Origin `http://localhost`
+(its preflight returns `Access-Control-Allow-Origin: http://localhost`). So a
+static GitHub Pages site (`https://bekdemirbek.github.io`) **cannot call the API
+directly from the browser** — it's blocked, regardless of the key.
+
+The fix is a tiny **proxy that calls the API server-side** (no CORS there) and
+returns permissive CORS headers, with the token kept in the proxy's env — never
+in the web bundle. Two forms ship in [`tools/api_proxy/`](tools/api_proxy/):
+
+- `server.mjs` — Node proxy for **local** web dev.
+- `cloudflare-worker.js` — a deploy-ready **Cloudflare Worker** for the hosted
+  demo. The CI build reads the repo Actions Variable `API_PROXY_URL` and points
+  the web app at it; the key lives only in the Worker's secret.
+
 ## Security — API keys
 
 - Keys come from `--dart-define` (`String.fromEnvironment`) — **nothing is
@@ -141,10 +157,10 @@ fuzzy team-name matching** (normalized, FC/CF/AC suffixes stripped).
   so if you build a mobile **APK/IPA with `--dart-define=KEY=...`, the key is
   baked into the binary** and is recoverable by decompiling. For a real release
   the correct pattern is to **not ship the key in the client at all** and route
-  through a backend/proxy — which this project already does for web via the small
-  Node proxy in [`tools/api_proxy/`](tools/api_proxy/) (keeps the token
-  server-side and fixes CORS). For production mobile you'd point the app at that
-  same proxy/backend.
+  through a backend/proxy — which this project does for web (Node proxy locally,
+  a hosted **Cloudflare Worker** for the live demo; both keep the token
+  server-side and fix CORS — see [`tools/api_proxy/`](tools/api_proxy/)). For
+  production mobile you'd point the app at that same proxy/backend.
 
 ## Tech stack
 
