@@ -42,18 +42,19 @@ void main() {
     });
 
     test('rank is assigned from the parameter, not JSON', () {
-      final scorer = Scorer.fromJson(
-        {'player': {}, 'team': {}, 'goals': 10},
-        rank: 4,
-      );
+      final scorer = Scorer.fromJson({
+        'player': {},
+        'team': {},
+        'goals': 10,
+      }, rank: 4);
       expect(scorer.rank, 4);
     });
 
     test('defaults missing numeric fields to 0', () {
-      final scorer = Scorer.fromJson(
-        {'player': {'name': 'Test Player'}, 'team': {'name': 'FC Test'}},
-        rank: 1,
-      );
+      final scorer = Scorer.fromJson({
+        'player': {'name': 'Test Player'},
+        'team': {'name': 'FC Test'},
+      }, rank: 1);
       expect(scorer.goals, 0);
       expect(scorer.assists, 0);
       expect(scorer.penalties, 0);
@@ -125,7 +126,10 @@ void main() {
                       'playedMatches': 35,
                     },
                     {
-                      'player': {'name': 'Mohamed Salah', 'nationality': 'Egypt'},
+                      'player': {
+                        'name': 'Mohamed Salah',
+                        'nationality': 'Egypt',
+                      },
                       'team': {'name': 'Liverpool FC'},
                       'goals': 22,
                       'assists': 13,
@@ -177,10 +181,9 @@ void main() {
             ApiService(
               apiKey: 'test',
               dio: Dio(BaseOptions(baseUrl: 'https://example.test'))
-                ..httpClientAdapter = _RecordingAdapter(
-                  {'scorers': []},
-                  onRequest: (path) => requestedCode = path,
-                ),
+                ..httpClientAdapter = _RecordingAdapter({
+                  'scorers': [],
+                }, onRequest: (path) => requestedCode = path),
             ),
           ),
         ],

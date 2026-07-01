@@ -44,7 +44,10 @@ void main() {
     const arsenal = FavoriteTeam(id: '57', name: 'Arsenal FC');
     await container.read(favoriteTeamsProvider.notifier).toggle(arsenal);
 
-    expect(container.read(favoriteTeamsProvider).value!.map((t) => t.name), contains('Arsenal FC'));
+    expect(
+      container.read(favoriteTeamsProvider).value!.map((t) => t.name),
+      contains('Arsenal FC'),
+    );
 
     await container.read(favoriteTeamsProvider.notifier).toggle(arsenal);
 

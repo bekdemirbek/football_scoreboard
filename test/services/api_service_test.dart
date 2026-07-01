@@ -10,10 +10,10 @@ import 'package:football_scoreboard/services/api_service.dart';
 /// sahte bir adapter ile değiştirilir.
 void main() {
   ApiService serviceWith(HttpClientAdapter adapter) => ApiService(
-        apiKey: 'test-key',
-        dio: Dio(BaseOptions(baseUrl: 'https://example.test'))
-          ..httpClientAdapter = adapter,
-      );
+    apiKey: 'test-key',
+    dio: Dio(BaseOptions(baseUrl: 'https://example.test'))
+      ..httpClientAdapter = adapter,
+  );
 
   group('Hata yönetimi', () {
     test('429 → dakika limiti mesajıyla StateError fırlatır', () {
@@ -58,24 +58,27 @@ void main() {
   group('Veri ayrıştırma', () {
     test('fetchStandings TOTAL tablosunu doğru çözer', () async {
       final service = serviceWith(
-        _StatusAdapter(200, body: {
-          'standings': [
-            {
-              'type': 'TOTAL',
-              'table': [
-                {
-                  'position': 1,
-                  'team': {'id': '57', 'name': 'Arsenal'},
-                  'playedGames': 10,
-                  'won': 8,
-                  'draw': 1,
-                  'lost': 1,
-                  'points': 25,
-                },
-              ],
-            },
-          ],
-        }),
+        _StatusAdapter(
+          200,
+          body: {
+            'standings': [
+              {
+                'type': 'TOTAL',
+                'table': [
+                  {
+                    'position': 1,
+                    'team': {'id': '57', 'name': 'Arsenal'},
+                    'playedGames': 10,
+                    'won': 8,
+                    'draw': 1,
+                    'lost': 1,
+                    'points': 25,
+                  },
+                ],
+              },
+            ],
+          },
+        ),
       );
 
       final standings = await service.fetchStandings(leagueId: 'PL');
@@ -159,9 +162,13 @@ class _PerLeagueAdapter implements HttpClientAdapter {
   ) async {
     final isOk = options.uri.path.contains('/$okCode/');
     if (!isOk) {
-      return ResponseBody.fromString('{}', 429, headers: {
-        Headers.contentTypeHeader: [Headers.jsonContentType],
-      });
+      return ResponseBody.fromString(
+        '{}',
+        429,
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
+      );
     }
     return ResponseBody.fromString(
       jsonEncode({

@@ -58,61 +58,74 @@ void main() {
   group('Liderlik sıralaması (QuizLeaderboardNotifier)', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    test('önce skora (yüksek→düşük), eşitlikte süreye (kısa→uzun) göre', () async {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+    test(
+      'önce skora (yüksek→düşük), eşitlikte süreye (kısa→uzun) göre',
+      () async {
+        final container = ProviderContainer();
+        addTearDown(container.dispose);
 
-      // build() tamamlansın (boş liste yüklensin).
-      await container.read(quizLeaderboardProvider.future);
-      final notifier = container.read(quizLeaderboardProvider.notifier);
+        // build() tamamlansın (boş liste yüklensin).
+        await container.read(quizLeaderboardProvider.future);
+        final notifier = container.read(quizLeaderboardProvider.notifier);
 
-      final now = DateTime(2026, 7, 1);
-      await notifier.addResult(QuizResult(
-        id: 'a',
-        correctCount: 8,
-        totalQuestions: 10,
-        elapsed: const Duration(seconds: 120),
-        playedAt: now,
-      ));
-      await notifier.addResult(QuizResult(
-        id: 'b',
-        correctCount: 10,
-        totalQuestions: 10,
-        elapsed: const Duration(seconds: 200),
-        playedAt: now,
-      ));
-      await notifier.addResult(QuizResult(
-        id: 'c',
-        correctCount: 10,
-        totalQuestions: 10,
-        elapsed: const Duration(seconds: 150),
-        playedAt: now,
-      ));
+        final now = DateTime(2026, 7, 1);
+        await notifier.addResult(
+          QuizResult(
+            id: 'a',
+            correctCount: 8,
+            totalQuestions: 10,
+            elapsed: const Duration(seconds: 120),
+            playedAt: now,
+          ),
+        );
+        await notifier.addResult(
+          QuizResult(
+            id: 'b',
+            correctCount: 10,
+            totalQuestions: 10,
+            elapsed: const Duration(seconds: 200),
+            playedAt: now,
+          ),
+        );
+        await notifier.addResult(
+          QuizResult(
+            id: 'c',
+            correctCount: 10,
+            totalQuestions: 10,
+            elapsed: const Duration(seconds: 150),
+            playedAt: now,
+          ),
+        );
 
-      final list = container.read(quizLeaderboardProvider).value!;
-      // c (10/150) > b (10/200) > a (8/120)
-      expect(list.map((r) => r.id).toList(), ['c', 'b', 'a']);
-    });
+        final list = container.read(quizLeaderboardProvider).value!;
+        // c (10/150) > b (10/200) > a (8/120)
+        expect(list.map((r) => r.id).toList(), ['c', 'b', 'a']);
+      },
+    );
 
-    test('kaydedilen sonuç kalıcıdır (yeni container aynı veriyi yükler)',
-        () async {
-      final c1 = ProviderContainer();
-      await c1.read(quizLeaderboardProvider.future);
-      await c1.read(quizLeaderboardProvider.notifier).addResult(
-            QuizResult(
-              id: 'x',
-              correctCount: 5,
-              totalQuestions: 10,
-              elapsed: const Duration(seconds: 60),
-              playedAt: DateTime(2026, 7, 1),
-            ),
-          );
-      c1.dispose();
+    test(
+      'kaydedilen sonuç kalıcıdır (yeni container aynı veriyi yükler)',
+      () async {
+        final c1 = ProviderContainer();
+        await c1.read(quizLeaderboardProvider.future);
+        await c1
+            .read(quizLeaderboardProvider.notifier)
+            .addResult(
+              QuizResult(
+                id: 'x',
+                correctCount: 5,
+                totalQuestions: 10,
+                elapsed: const Duration(seconds: 60),
+                playedAt: DateTime(2026, 7, 1),
+              ),
+            );
+        c1.dispose();
 
-      final c2 = ProviderContainer();
-      addTearDown(c2.dispose);
-      final loaded = await c2.read(quizLeaderboardProvider.future);
-      expect(loaded.map((r) => r.id), contains('x'));
-    });
+        final c2 = ProviderContainer();
+        addTearDown(c2.dispose);
+        final loaded = await c2.read(quizLeaderboardProvider.future);
+        expect(loaded.map((r) => r.id), contains('x'));
+      },
+    );
   });
 }

@@ -15,7 +15,11 @@ void main() {
 
   group('FavoriteTeam', () {
     test('serialises and deserialises correctly', () {
-      const team = FavoriteTeam(id: '57', name: 'Arsenal FC', crestUrl: 'https://example.test/crest.png');
+      const team = FavoriteTeam(
+        id: '57',
+        name: 'Arsenal FC',
+        crestUrl: 'https://example.test/crest.png',
+      );
       final json = team.toJson();
       final roundTripped = FavoriteTeam.fromJson(json);
 
@@ -26,7 +30,10 @@ void main() {
 
     test('equality is by id when id is non-empty', () {
       const a = FavoriteTeam(id: '57', name: 'Arsenal FC');
-      const b = FavoriteTeam(id: '57', name: 'Arsenal'); // same id, different name
+      const b = FavoriteTeam(
+        id: '57',
+        name: 'Arsenal',
+      ); // same id, different name
       expect(a, equals(b));
     });
 
@@ -48,7 +55,11 @@ void main() {
     test('listFromPrefs handles JSON entries', () {
       final raw = [
         jsonEncode({'id': '57', 'name': 'Arsenal FC'}),
-        jsonEncode({'id': '61', 'name': 'Chelsea FC', 'crestUrl': 'https://x.test'}),
+        jsonEncode({
+          'id': '61',
+          'name': 'Chelsea FC',
+          'crestUrl': 'https://x.test',
+        }),
       ];
       final teams = FavoriteTeam.listFromPrefs(raw);
       expect(teams.first.id, '57');
@@ -72,12 +83,15 @@ void main() {
       addTearDown(container.dispose);
 
       await container.read(favoriteTeamsProvider.future);
-      await container.read(favoriteTeamsProvider.notifier).toggle(
-        const FavoriteTeam(id: '57', name: 'Arsenal FC'),
-      );
+      await container
+          .read(favoriteTeamsProvider.notifier)
+          .toggle(const FavoriteTeam(id: '57', name: 'Arsenal FC'));
 
       expect(container.read(favoriteTeamsProvider).value, hasLength(1));
-      expect(container.read(favoriteTeamsProvider).value!.first.name, 'Arsenal FC');
+      expect(
+        container.read(favoriteTeamsProvider).value!.first.name,
+        'Arsenal FC',
+      );
     });
 
     test('toggle removes a team that is already in the list', () async {
@@ -100,7 +114,10 @@ void main() {
       const team = FavoriteTeam(id: '57', name: 'Arsenal FC');
       await container.read(favoriteTeamsProvider.notifier).toggle(team);
 
-      expect(container.read(favoriteTeamsProvider.notifier).isFavorite(team), isTrue);
+      expect(
+        container.read(favoriteTeamsProvider.notifier).isFavorite(team),
+        isTrue,
+      );
     });
 
     test('isFavoriteByName matches by name', () async {
@@ -108,35 +125,42 @@ void main() {
       addTearDown(container.dispose);
 
       await container.read(favoriteTeamsProvider.future);
-      await container.read(favoriteTeamsProvider.notifier).toggle(
-        const FavoriteTeam(id: '57', name: 'Arsenal FC'),
-      );
+      await container
+          .read(favoriteTeamsProvider.notifier)
+          .toggle(const FavoriteTeam(id: '57', name: 'Arsenal FC'));
 
       expect(
-        container.read(favoriteTeamsProvider.notifier).isFavoriteByName('Arsenal FC'),
+        container
+            .read(favoriteTeamsProvider.notifier)
+            .isFavoriteByName('Arsenal FC'),
         isTrue,
       );
       expect(
-        container.read(favoriteTeamsProvider.notifier).isFavoriteByName('Chelsea FC'),
+        container
+            .read(favoriteTeamsProvider.notifier)
+            .isFavoriteByName('Chelsea FC'),
         isFalse,
       );
     });
 
-    test('persists across container recreations via SharedPreferences', () async {
-      final container1 = ProviderContainer();
-      await container1.read(favoriteTeamsProvider.future);
-      await container1.read(favoriteTeamsProvider.notifier).toggle(
-        const FavoriteTeam(id: '57', name: 'Arsenal FC'),
-      );
-      container1.dispose();
+    test(
+      'persists across container recreations via SharedPreferences',
+      () async {
+        final container1 = ProviderContainer();
+        await container1.read(favoriteTeamsProvider.future);
+        await container1
+            .read(favoriteTeamsProvider.notifier)
+            .toggle(const FavoriteTeam(id: '57', name: 'Arsenal FC'));
+        container1.dispose();
 
-      final container2 = ProviderContainer();
-      addTearDown(container2.dispose);
-      final teams = await container2.read(favoriteTeamsProvider.future);
+        final container2 = ProviderContainer();
+        addTearDown(container2.dispose);
+        final teams = await container2.read(favoriteTeamsProvider.future);
 
-      expect(teams, hasLength(1));
-      expect(teams.first.name, 'Arsenal FC');
-    });
+        expect(teams, hasLength(1));
+        expect(teams.first.name, 'Arsenal FC');
+      },
+    );
   });
 
   // ── teamMatchesProvider ────────────────────────────────────────────────────
